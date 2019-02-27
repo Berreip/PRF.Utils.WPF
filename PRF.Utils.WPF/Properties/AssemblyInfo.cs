@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("PRF.Utils.WPF")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Provide basic classes for WPF application as well as built-in converters, validations rules, tree helpers, etc.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("PRF")]
 [assembly: AssemblyProduct("PRF.Utils.WPF")]
-[assembly: AssemblyCopyright("Copyright ©  2019")]
+[assembly: AssemblyCopyright("Copyright ©  PRF")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
