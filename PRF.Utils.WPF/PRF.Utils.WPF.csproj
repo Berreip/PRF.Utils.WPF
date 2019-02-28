@@ -31,6 +31,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Release\PRF.Utils.WPF.xml</DocumentationFile>
+    <LangVersion>7.3</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Castle.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
@@ -82,6 +83,9 @@
     <Compile Include="Helpers\WpfExtensionMethods.cs" />
     <Compile Include="LiveCollection\LiveFilteringHelper.cs" />
     <Compile Include="NotifierBase.cs" />
+    <Compile Include="PopupManager\IPopupWindowsViewModel.cs" />
+    <Compile Include="PopupManager\WindowRegistrationMode.cs" />
+    <Compile Include="PopupManager\WindowsPopupManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UiWorkerThread\UiThreadDispatcher.cs" />
     <Compile Include="UiWorkerThread\WrapperCoreUi.cs" />
@@ -94,8 +98,6 @@
     <None Include="packages.config" />
     <None Include="PRF.Utils.WPF.nuspec" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="PopupManager\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
