@@ -31,7 +31,7 @@ namespace WpfModelApp
 
             //ViewModels
             container.RegisterType<View1ViewModel>(LifeTime.Singleton);
-            container.RegisterType<View1ViewModel>(LifeTime.Singleton);
+            container.RegisterType<View2ViewModel>(LifeTime.Singleton);
 
             // Windows
             popupManager.RegisterWindow<Popup1ViewModel, Popup1View>(WpfModelAppEnumWindow.Popup1);
