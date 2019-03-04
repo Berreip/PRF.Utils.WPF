@@ -8,7 +8,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              d:DataContext="{d:DesignInstance local:View2ViewModel, IsDesignTimeCreatable=true}">
-    <Grid>
+    <Grid Background="Yellow">
             
     </Grid>
 </UserControl>

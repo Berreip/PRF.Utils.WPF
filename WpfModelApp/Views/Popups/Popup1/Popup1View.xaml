@@ -6,9 +6,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:WpfModelApp.Views.Popups.Popup1"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800"
+             Height="250" Width="400"
         d:DataContext="{d:DesignInstance local:Popup1ViewModel, IsDesignTimeCreatable=true}">
-    <Grid>
+    <Grid Background="DarkOrange">
             
     </Grid>
 </Window>

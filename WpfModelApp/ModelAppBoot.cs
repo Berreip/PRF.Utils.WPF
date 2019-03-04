@@ -10,6 +10,7 @@ using WpfModelApp.Views;
 using WpfModelApp.Views.MainView.View1;
 using WpfModelApp.Views.MainView.View2;
 using WpfModelApp.Views.Popups.Popup1;
+using WpfModelApp.Views.SecondaryView.SecondaryView1;
 
 namespace WpfModelApp
 {
@@ -28,10 +29,12 @@ namespace WpfModelApp
             //Views
             container.RegisterType<View1View>(LifeTime.Singleton);
             container.RegisterType<View2View>(LifeTime.Singleton);
+            container.RegisterType<Secondary1View>(LifeTime.Singleton);
 
             //ViewModels
             container.RegisterType<View1ViewModel>(LifeTime.Singleton);
             container.RegisterType<View2ViewModel>(LifeTime.Singleton);
+            container.RegisterType<Secondary1ViewModel>(LifeTime.Singleton);
 
             // Windows
             popupManager.RegisterWindow<Popup1ViewModel, Popup1View>(WpfModelAppEnumWindow.Popup1);
