@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using PRF.Utils.WPF.UiWorkerThread;
 
 namespace PRF.Utils.WPF.Commands
@@ -7,9 +8,9 @@ namespace PRF.Utils.WPF.Commands
     public abstract class DelegateCommandLightBase : IDelegateCommandLight
     {
         /// <inheritdoc />
-        public void RaiseCanExecuteChanged()
+        public async Task RaiseCanExecuteChanged()
         {
-            UiThreadDispatcher.DispatchAsync(() => CanExecuteChanged?.Invoke(this, EventArgs.Empty));
+            await UiThreadDispatcher.DispatchAsync(() => CanExecuteChanged?.Invoke(this, EventArgs.Empty)).ConfigureAwait(false);
         }
 
         /// <inheritdoc />

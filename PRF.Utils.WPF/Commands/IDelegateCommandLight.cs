@@ -1,4 +1,5 @@
-﻿using System.Windows.Input;
+﻿using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace PRF.Utils.WPF.Commands
 {
@@ -17,7 +18,7 @@ namespace PRF.Utils.WPF.Commands
         /// <summary>
         /// Demande une réévaluation de la commande et dispatche dans le thread UI (en asynchrone) si l'on n'est pas déjà dedans.
         /// </summary>
-        void RaiseCanExecuteChanged();
+        Task RaiseCanExecuteChanged();
 
         /// <summary>
         /// Exécute la commande
