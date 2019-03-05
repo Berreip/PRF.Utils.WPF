@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using PRF.Utils.WPF.Commands;
 
 namespace PRF.Utils.WPF.Navigation
@@ -6,7 +7,7 @@ namespace PRF.Utils.WPF.Navigation
     /// <summary>
     /// Interface des commandes de navigation du menu principal
     /// </summary>
-    public interface INavigationCommand
+    public interface INavigationCommand : INotifyPropertyChanged
     {
         /// <summary>
         /// Le nom du boutton

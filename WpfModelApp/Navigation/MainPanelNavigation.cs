@@ -30,6 +30,10 @@ namespace WpfModelApp.Navigation
             Commands = ObservableCollectionSource.GetDefaultView(out _commandsObs);
             _commandsObs.Add(AddNavigationView<View1View>("Vue 1"));
             _commandsObs.Add(AddNavigationView<View2View>("Vue 2"));
+            //foreach (var cmd in _commandsObs)
+            //{
+            //    cmd.
+            //}
         }
     }
 
