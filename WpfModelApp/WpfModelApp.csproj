@@ -79,8 +79,8 @@
     <Reference Include="PRF.Utils.Injection, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\PRF.Utils.Injection.1.0.1\lib\netstandard2.0\PRF.Utils.Injection.dll</HintPath>
     </Reference>
-    <Reference Include="PRF.Utils.WPF, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\PRF.Utils.WPF.1.0.2\lib\net461\PRF.Utils.WPF.dll</HintPath>
+    <Reference Include="PRF.Utils.WPF, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <HintPath>..\packages\PRF.Utils.WPF.1.0.4\lib\net461\PRF.Utils.WPF.dll</HintPath>
     </Reference>
     <Reference Include="SimpleInjector, Version=4.4.3.0, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
       <HintPath>..\packages\SimpleInjector.4.4.3\lib\net45\SimpleInjector.dll</HintPath>

@@ -53,7 +53,7 @@
                 <DockPanel>
                     <ToggleButton x:Name="MenuToggleButton" 
                                   Style="{StaticResource MaterialDesignHamburgerToggleButton}"
-                                  IsChecked="False"/>
+                                  IsChecked="{Binding MainPanelNavigation.ShouldDisplayMenu}"/>
                     <materialDesign:PopupBox DockPanel.Dock="Right" PlacementMode="BottomAndAlignRightEdges" StaysOpen="False">
                         <StackPanel>
                             <Button Content="Popup ShowDialog" Command="{Binding OpenPopup1ShowDialogCommand}"/>
