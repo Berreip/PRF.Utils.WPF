@@ -1,7 +1,7 @@
 ﻿<package >
   <metadata>
     <id>PRF.Utils.WPF</id>
-    <version>1.0.4</version>
+    <version>1.0.5</version>
     <title>WPF basics helper components</title>
     <authors>B. Chappe, P. Bony</authors>
     <owners>PRF</owners>
