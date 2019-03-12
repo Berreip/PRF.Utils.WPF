@@ -14,6 +14,7 @@
     <tags>WPF, ObservableCollectionRanged, LiveCollection</tags>
     <dependencies>
       <dependency id="PRF.Utils.CoreComponents" version="1.0" />
+      <dependency id="PRF.Utils.Injection" version="1.0" />
     </dependencies>
 
   </metadata>
