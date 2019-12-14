@@ -1,22 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Reflection;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using PRF.Utils.CoreComponents.Extensions;
 
 namespace PRF.Utils.WPF
 {
     /// <summary>
-    /// Classe de base pour toutes les classes notifiantes. 
+    /// Classe de base pour toutes les classes notifiantes. Cette version ne vérifie pas que la propriété notifiante existe bien. 
+    /// Celà permet d'éviter la réflexion pour contruire le hash de vérification dans les cas où cette étape serait impactante (très très peu probable)
     /// Afin d'eviter les fuites mémoires, il est conseillé de dériver de cette classe dans tous les ViewModel et tous les adapteurs
     /// (ou d'implémenter INotifyPropertyChanged)
     /// </summary>
-    public abstract class NotifierBase : INotifyPropertyChanged
+    public abstract class NotifierBaseUnchecked : INotifyPropertyChanged
     {
-        private readonly HashSet<string> _propertyHash;
-
         /// <inheritdoc />
         /// <summary>
         /// L'évènement de changement des propriétés notifiantes
@@ -24,26 +18,10 @@ namespace PRF.Utils.WPF
         public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
-        /// Constructeur
-        /// </summary>
-        protected NotifierBase()
-        {
-            // stocke les propriétés à la construction pour la vérification:
-            _propertyHash = GetType()
-                .GetProperties(BindingFlags.Instance | BindingFlags.Public)
-                .Select(o => o.Name)
-                .ToHashSet();
-        }
-
-        /// <summary>
         /// Notifie un changement de valeur d'une propriété notifiable
         /// </summary>
         protected void Notify([CallerMemberName] string propertyName = null)
         {
-            if (!_propertyHash.Contains(propertyName))
-            {
-                throw new InvalidOperationException($"Trying to raise notification on property \"{propertyName}\" which does not exists on type \"{GetType().Name}\"");
-            }
             InvokeProperty(new PropertyChangedEventArgs(propertyName));
         }
 

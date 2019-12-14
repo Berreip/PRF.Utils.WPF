@@ -8,7 +8,21 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              d:DataContext="{d:DesignInstance local:View1ViewModel, IsDesignTimeCreatable=true}">
-    <Grid Background="Orange">
-            
+    <Grid Margin="15">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <StackPanel>
+            <TextBox Text="{Binding Limit}"/>
+            <TextBlock Text="{Binding Collection.Count}"/>
+            <Button Content="Reset" Command="{Binding ResetCommand}" Margin="4"/>
+            <Button Content="Add Classic" Command="{Binding StartAddCommand}" Margin="4"/>
+            <Button Content="AddRange Classic" Command="{Binding StartAddRangeCommand}" Margin="4"/>
+        </StackPanel>
+
+        <ListBox Grid.Column="1" ItemsSource="{Binding Collection}" Background="LightGray" Margin="2"/>
+
     </Grid>
 </UserControl>

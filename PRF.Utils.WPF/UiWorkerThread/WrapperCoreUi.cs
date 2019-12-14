@@ -29,7 +29,19 @@ namespace PRF.Utils.WPF.UiWorkerThread
             }
             finally
             {
+                InvokeFinally(onFinally);
+            }
+        }
+
+        private static void InvokeFinally(Action onFinally)
+        {
+            try
+            {
                 onFinally?.Invoke();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show($"Error On finally: {e}");
             }
         }
 

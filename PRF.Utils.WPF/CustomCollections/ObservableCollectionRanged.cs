@@ -58,10 +58,13 @@ namespace PRF.Utils.WPF.CustomCollections
         /// <param name="items">la liste des éléments à ajouter</param>
         public void AddRange(IEnumerable<T> items)
         {
-            foreach (var item in items)
+            lock (_syncCollection)
             {
-                Add(item);
-            }
+                foreach (var item in items)
+                {
+                    Items.Add(item);
+                }
+            }            
             OnPropertyChanged(new PropertyChangedEventArgs(nameof(Count)));
             OnPropertyChanged(new PropertyChangedEventArgs("Item[]"));
             OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
@@ -73,8 +76,11 @@ namespace PRF.Utils.WPF.CustomCollections
         /// <param name="items">la liste des éléments à ajouter après le nettoyage</param>
         public void Reset(IEnumerable<T> items)
         {
-            Items.Clear();
-            AddRange(items);
+            lock (_syncCollection)
+            {
+                Items.Clear();
+                AddRange(items);
+            }
         }
 
         /// <summary>
@@ -84,33 +90,35 @@ namespace PRF.Utils.WPF.CustomCollections
         /// <param name="elementsToAdd">la liste </param>
         public void AddRangeDifferential(IEnumerable<T> elementsToAdd)
         {
-            var isPresentDictionary = elementsToAdd.ToDictionary(o => o, o => false);
-            var itemToRemoves = new List<T>();
-            foreach (var item in Items)
+            lock (_syncCollection)
             {
-                if (!isPresentDictionary.ContainsKey(item))
+                var isPresentDictionary = elementsToAdd.ToDictionary(o => o, o => false);
+                var itemToRemoves = new List<T>();
+                foreach (var item in Items)
                 {
-                    // ajoute à la liste des éléments à supprimer
-                    itemToRemoves.Add(item);
+                    if (!isPresentDictionary.ContainsKey(item))
+                    {
+                        // ajoute à la liste des éléments à supprimer
+                        itemToRemoves.Add(item);
+                    }
+                    else
+                    {
+                        // signale que l'élément est déjà présent
+                        isPresentDictionary[item] = true;
+                    }
                 }
-                else
+
+                // supprime les éléments signalés en tant que tel:
+                foreach (var itemToRemove in itemToRemoves)
                 {
-                    // signale que l'élément est déjà présent
-                    isPresentDictionary[item] = true;
+                    Remove(itemToRemove);
+                }
+                // ajoute les nouveaux
+                foreach (var newItem in isPresentDictionary.Where(o => !o.Value))
+                {
+                    Add(newItem.Key);
                 }
             }
-
-            // supprime les éléments signalés en tant que tel:
-            foreach (var itemToRemove in itemToRemoves)
-            {
-                Remove(itemToRemove);
-            }
-            // ajoute les nouveaux
-            foreach (var newItem in isPresentDictionary.Where(o => !o.Value))
-            {
-                Add(newItem.Key);
-            }
-
             OnPropertyChanged(new PropertyChangedEventArgs(nameof(Count)));
             OnPropertyChanged(new PropertyChangedEventArgs("Item[]"));
             OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
