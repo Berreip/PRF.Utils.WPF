@@ -1,9 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
+using System.Windows;
 using System.Windows.Data;
+using System.Windows.Threading;
 
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable UnusedMember.Global
@@ -29,11 +32,7 @@ namespace PRF.Utils.WPF.CustomCollections
         ///  synchronisation dans le thread UI (true). Sinon, il faut préalablement se synchroniser dans le thread UI (false)</param>
         public ObservableCollectionRanged(bool enableCollectionSynchronisation = true)
         {
-            if (enableCollectionSynchronisation)
-            {
-                // Active la synchronisation de la collection d'objets de données
-                BindingOperations.EnableCollectionSynchronization(this, _syncCollection);
-            }
+            EnableCollectionSync(enableCollectionSynchronisation);
         }
 
         /// <summary>
@@ -45,13 +44,9 @@ namespace PRF.Utils.WPF.CustomCollections
         ///  synchronisation dans le thread UI (true). Sinon, il faut préalablement se synchroniser dans le thread UI (false)</param>
         public ObservableCollectionRanged(IEnumerable<T> elements, bool enableCollectionSynchronisation = true) : base(elements)
         {
-            if (enableCollectionSynchronisation)
-            {
-                // Active la synchronisation de la collection d'objets de données
-                BindingOperations.EnableCollectionSynchronization(this, _syncCollection);
-            }
+            EnableCollectionSync(enableCollectionSynchronisation);
         }
-
+        
         /// <summary>
         /// Ajoute tous les éléments fournis avec une seule notification finale
         /// </summary>
@@ -60,15 +55,11 @@ namespace PRF.Utils.WPF.CustomCollections
         {
             lock (_syncCollection)
             {
-                foreach (var item in items)
-                {
-                    Items.Add(item);
-                }
-            }            
-            OnPropertyChanged(new PropertyChangedEventArgs(nameof(Count)));
-            OnPropertyChanged(new PropertyChangedEventArgs("Item[]"));
-            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+                AddRangeInternal(items);
+            }
+            Notify();
         }
+
 
         /// <summary>
         /// Nettoie la collection et lui ajoute tous les éléments fournis (avec une seule notification finale)
@@ -79,8 +70,9 @@ namespace PRF.Utils.WPF.CustomCollections
             lock (_syncCollection)
             {
                 Items.Clear();
-                AddRange(items);
+                AddRangeInternal(items);
             }
+            Notify();
         }
 
         /// <summary>
@@ -111,17 +103,46 @@ namespace PRF.Utils.WPF.CustomCollections
                 // supprime les éléments signalés en tant que tel:
                 foreach (var itemToRemove in itemToRemoves)
                 {
-                    Remove(itemToRemove);
+                    Items.Remove(itemToRemove);
                 }
+
                 // ajoute les nouveaux
-                foreach (var newItem in isPresentDictionary.Where(o => !o.Value))
-                {
-                    Add(newItem.Key);
-                }
+                AddRangeInternal(isPresentDictionary.Where(o => !o.Value).Select(o => o.Key));                
             }
+            Notify();
+        }
+        /// <summary>
+        /// Add range without notification (to avoid a lock on Notify)
+        /// </summary>
+        private void AddRangeInternal(IEnumerable<T> items)
+        {
+            foreach (var item in items)
+            {
+                Items.Add(item);
+            }
+        }
+
+        private void Notify()
+        {
             OnPropertyChanged(new PropertyChangedEventArgs(nameof(Count)));
             OnPropertyChanged(new PropertyChangedEventArgs("Item[]"));
             OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
         }
+
+        private void EnableCollectionSync(bool enableCollectionSynchronisation)
+        {
+            if (enableCollectionSynchronisation)
+            {
+                if (!GetUiThread()?.CheckAccess() ?? false)
+                {
+                    // thrown an exception if not in the UIThread (this collection should be created in the UI Thread)
+                    throw new InvalidOperationException($"Error: {nameof(ObservableCollectionRanged<T>)} should be created in the UiThread");
+                }
+                // Active la synchronisation de la collection d'objets de données
+                BindingOperations.EnableCollectionSynchronization(this, _syncCollection);
+            }
+        }
+
+        private static Dispatcher GetUiThread() => Application.Current != null ? Application.Current.Dispatcher : Dispatcher.CurrentDispatcher;
     }
 }
