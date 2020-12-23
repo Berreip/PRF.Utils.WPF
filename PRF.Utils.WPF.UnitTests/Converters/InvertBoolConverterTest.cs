@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Globalization;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using NUnit.Framework;
 using PRF.Utils.WPF.Converters;
 
 namespace PRF.Utils.WPF.UnitTest.Converters
 {
-    [TestClass]
+    [TestFixture]
     public class InvertBoolConverterTest
     {
         private InvertBoolConverter _instance;
 
-        [TestInitialize]
+        [SetUp]
         public void TestInitialize()
         {
             // mock:
@@ -20,7 +20,7 @@ namespace PRF.Utils.WPF.UnitTest.Converters
             _instance = new InvertBoolConverter();
         }
         
-        [TestMethod]
+        [Test]
         public void ConvertV1()
         {
             //Configuration
@@ -33,7 +33,7 @@ namespace PRF.Utils.WPF.UnitTest.Converters
             Assert.IsFalse((bool)res);
         }
 
-        [TestMethod]
+        [Test]
         public void ConvertV2()
         {
             //Configuration
@@ -46,7 +46,7 @@ namespace PRF.Utils.WPF.UnitTest.Converters
             Assert.IsTrue((bool)res);
         }
 
-        [TestMethod]
+        [Test]
         public void ConvertBackV1()
         {
             //Configuration
@@ -59,7 +59,7 @@ namespace PRF.Utils.WPF.UnitTest.Converters
             Assert.IsFalse((bool)res);
         }
 
-        [TestMethod]
+        [Test]
         public void ConvertBackV2()
         {
             //Configuration
@@ -72,30 +72,26 @@ namespace PRF.Utils.WPF.UnitTest.Converters
             Assert.IsTrue((bool)res);
         }
 
-        [ExpectedException(typeof(InvalidCastException))]
-        [TestMethod]
+        [Test]
         public void ConvertNotABool()
         {
             //Configuration
 
             //Test
-            var _ = _instance.Convert(45, typeof(bool), null, It.IsAny<CultureInfo>());
+            Assert.Throws<InvalidCastException>(() => _instance.Convert(45, typeof(bool), null, It.IsAny<CultureInfo>()));
 
             //Verify
-            Assert.Fail("should have raised an InvalidCastException");
         }
 
-        [ExpectedException(typeof(InvalidCastException))]
-        [TestMethod]
+        [Test]
         public void ConvertBackNotABool()
         {
             //Configuration
 
             //Test
-            var _ = _instance.ConvertBack(45, typeof(bool), null, It.IsAny<CultureInfo>());
+            Assert.Throws<InvalidCastException>(() => _instance.ConvertBack(45, typeof(bool), null, It.IsAny<CultureInfo>()));
 
             //Verify
-            Assert.Fail("should have raised an InvalidCastException");
         }
 
     }

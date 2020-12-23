@@ -47,12 +47,7 @@ namespace WpfModelApp.Navigation
         public bool ShouldDisplayMenu
         {
             get => _displayMenu;
-            set
-            {
-                if (_displayMenu == value) return;
-                _displayMenu = value;
-                Notify();
-            }
+            set => SetProperty(ref _displayMenu, value);
         }
 
         private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)

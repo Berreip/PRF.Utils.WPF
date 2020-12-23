@@ -53,11 +53,12 @@ namespace PRF.Utils.WPF.CustomCollections
         /// <param name="items">la liste des éléments à ajouter</param>
         public void AddRange(IEnumerable<T> items)
         {
+            CheckReentrancy();
             lock (_syncCollection)
             {
                 AddRangeInternal(items);
             }
-            Notify();
+            NotifyReset();
         }
 
 
@@ -67,12 +68,13 @@ namespace PRF.Utils.WPF.CustomCollections
         /// <param name="items">la liste des éléments à ajouter après le nettoyage</param>
         public void Reset(IEnumerable<T> items)
         {
+            CheckReentrancy();
             lock (_syncCollection)
             {
                 Items.Clear();
                 AddRangeInternal(items);
             }
-            Notify();
+            NotifyReset();
         }
 
         /// <summary>
@@ -82,6 +84,7 @@ namespace PRF.Utils.WPF.CustomCollections
         /// <param name="elementsToAdd">la liste </param>
         public void AddRangeDifferential(IEnumerable<T> elementsToAdd)
         {
+            CheckReentrancy();
             lock (_syncCollection)
             {
                 var isPresentDictionary = elementsToAdd.ToDictionary(o => o, o => false);
@@ -109,7 +112,7 @@ namespace PRF.Utils.WPF.CustomCollections
                 // ajoute les nouveaux
                 AddRangeInternal(isPresentDictionary.Where(o => !o.Value).Select(o => o.Key));                
             }
-            Notify();
+            NotifyReset();
         }
         /// <summary>
         /// Add range without notification (to avoid a lock on Notify)
@@ -122,7 +125,7 @@ namespace PRF.Utils.WPF.CustomCollections
             }
         }
 
-        private void Notify()
+        private void NotifyReset()
         {
             OnPropertyChanged(new PropertyChangedEventArgs(nameof(Count)));
             OnPropertyChanged(new PropertyChangedEventArgs("Item[]"));
@@ -140,6 +143,46 @@ namespace PRF.Utils.WPF.CustomCollections
                 }
                 // Active la synchronisation de la collection d'objets de données
                 BindingOperations.EnableCollectionSynchronization(this, _syncCollection);
+            }
+        }
+
+        protected override void InsertItem(int index, T item)
+        {
+            lock (_syncCollection)
+            {
+                base.InsertItem(index, item);
+            }
+        }
+
+        protected override void ClearItems()
+        {
+            lock (_syncCollection)
+            {
+                base.ClearItems();
+            }
+        }
+
+        protected override void MoveItem(int oldIndex, int newIndex)
+        {
+            lock (_syncCollection)
+            {
+                base.MoveItem(oldIndex, newIndex);
+            }
+        }
+
+        protected override void RemoveItem(int index)
+        {
+            lock (_syncCollection)
+            {
+                base.RemoveItem(index);
+            }
+        }
+
+        protected override void SetItem(int index, T item)
+        {
+            lock (_syncCollection)
+            {
+                base.SetItem(index, item);
             }
         }
 

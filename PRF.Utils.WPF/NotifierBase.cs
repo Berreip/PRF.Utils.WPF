@@ -47,6 +47,17 @@ namespace PRF.Utils.WPF
             InvokeProperty(new PropertyChangedEventArgs(propertyName));
         }
 
+        /// <summary>
+        /// Si la valeur a changé, met à jour l'ancienne valeur et notifie le changement de valeur de la propriété
+        /// </summary>
+        protected bool SetProperty<T>(ref T oldValue, T newValue, [CallerMemberName] string propertyName = null)
+        {
+            if (oldValue.Equals(newValue)) return false;
+            oldValue = newValue;
+            Notify(propertyName);
+            return true;
+        }
+
         private void InvokeProperty(PropertyChangedEventArgs e)
         {
             var handler = PropertyChanged;

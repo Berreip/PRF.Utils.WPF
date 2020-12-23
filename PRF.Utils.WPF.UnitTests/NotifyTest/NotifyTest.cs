@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace PRF.Utils.WPF.UnitTest.NotifyTest
 {
@@ -19,12 +19,12 @@ namespace PRF.Utils.WPF.UnitTest.NotifyTest
         }
     }
 
-    [TestClass]
+    [TestFixture]
     public class NotifyTest
     {
         private TestNotifierBaseClass _instance;
 
-        [TestInitialize]
+        [SetUp]
         public void TestInitialize()
         {
             // mock:
@@ -36,11 +36,11 @@ namespace PRF.Utils.WPF.UnitTest.NotifyTest
         /// <summary>
         /// Cas 1: test performance
         /// </summary>
-        [TestMethod]
+        [Test]
         public void NotifyV1()
         {
             //Configuration
-            const int upper = 5_000_000;
+            const int upper = 5_000;
 
             //Test
             var watch = Stopwatch.StartNew();
