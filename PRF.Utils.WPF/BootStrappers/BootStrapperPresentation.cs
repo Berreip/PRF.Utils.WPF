@@ -146,6 +146,9 @@ namespace PRF.Utils.WPF.BootStrappers
         /// <param name="container">le container d'injection</param>
         protected abstract void Register(IInjectionContainerRegister container);
 
+        /// <summary>
+        /// Wait for any loading task on Exit
+        /// </summary>
         public virtual void OnExit(object sender, ExitEventArgs e)
         {
             try

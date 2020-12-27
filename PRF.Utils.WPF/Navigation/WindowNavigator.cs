@@ -120,15 +120,25 @@ namespace PRF.Utils.WPF.Navigation
     /// </summary>
     public static class PanelWindowResolver
     {
+        /// <summary>
+        /// Retrieve the panel
+        /// </summary>
         public static NavigablePanelDependencyData GetPanel(DependencyObject obj)
         {
             return (NavigablePanelDependencyData)obj.GetValue(PanelProperty);
         }
 
+        /// <summary>
+        /// Set the panel
+        /// </summary>
         public static void SetPanel(DependencyObject obj, NavigablePanelDependencyData value)
         {
             obj.SetValue(PanelProperty, value);
         }
+
+        /// <summary>
+        /// The panel itself
+        /// </summary>
         public static readonly DependencyProperty PanelProperty = DependencyProperty.RegisterAttached(
             "Panel", typeof(NavigablePanelDependencyData), typeof(PanelWindowResolver),
             new PropertyMetadata(new NavigablePanelDependencyData(), OnPanelChanged));
@@ -136,8 +146,8 @@ namespace PRF.Utils.WPF.Navigation
 
         private static void OnPanelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (!(d is ContentControl content) ||
-                !(e.NewValue is NavigablePanelDependencyData dependencyData)) return;
+            if (d is not ContentControl content ||
+                e.NewValue is not NavigablePanelDependencyData dependencyData) return;
 
             try
             {
@@ -173,15 +183,24 @@ namespace PRF.Utils.WPF.Navigation
 
     }
 
+    /// <summary>
+    /// DependencyData used for keeping track of the displayed panel
+    /// </summary>
     public class NavigablePanelDependencyData
     {
         /// <summary>
-        /// Le type de la vue affichée
+        /// The displayed view type
         /// </summary>
         public Type ViewType { get; }
 
+        /// <summary>
+        /// Empty constructor
+        /// </summary>
         public NavigablePanelDependencyData() { }
 
+        /// <summary>
+        /// Guve the displayed view type
+        /// </summary>
         public NavigablePanelDependencyData(Type type)
         {
             ViewType = type;

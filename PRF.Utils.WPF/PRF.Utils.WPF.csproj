@@ -6,15 +6,21 @@
     <Product>PRF.Utils.WPF</Product>
     <Description>Provide basic classes for WPF application as well as built-in converters, validations rules, tree helpers, etc.</Description>
     <Copyright>PRF</Copyright>
-    <Version>1.0.5</Version>
+    <Version>1.0.6</Version>
     <DocumentationFile>bin\$(Configuration)\PRF.Utils.WPF.xml</DocumentationFile>
     <LangVersion>latest</LangVersion>
-    <Authors>B. Chappe, P. Bony</Authors>
-    <PackageIconUrl>https://raw.githubusercontent.com/Berreip/PRF.Utils.Core/master/PRF_Icon.png</PackageIconUrl>
+    <Authors>P. Bony</Authors>
+    <PackageIconUrl></PackageIconUrl>
     <PackageId>PRF.Utils.WPF</PackageId>
-    <PackageLicenseUrl>https://github.com/Berreip/PRF.Utils.Core/blob/master/LICENSE</PackageLicenseUrl>
-    <PackageReleaseNotes>1.0.0 release</PackageReleaseNotes>
+    <PackageLicenseUrl></PackageLicenseUrl>
+    <PackageReleaseNotes></PackageReleaseNotes>
     <PackageTags>WPF, ObservableCollectionRanged, LiveCollection</PackageTags>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <PackageIcon>PRF_Core_Component_Icon.png</PackageIcon>
+    <PackageProjectUrl>https://github.com/Berreip/PRF.Utils.WPF</PackageProjectUrl>
+    <AssemblyVersion>1.0.6.0</AssemblyVersion>
+    <FileVersion>1.0.6.0</FileVersion>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugType>full</DebugType>
@@ -44,5 +50,16 @@
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="PRF.Utils.CoreComponents" Version="1.0.5" />
     <PackageReference Include="PRF.Utils.Injection" Version="1.0.2" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\.editorconfig" Link=".editorconfig" />
+    <None Include="Ressources\LICENSE.txt">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+    <None Include="Ressources\PRF_Core_Component_Icon.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 </Project>

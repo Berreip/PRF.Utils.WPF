@@ -146,6 +146,9 @@ namespace PRF.Utils.WPF.CustomCollections
             }
         }
 
+        /// <summary>
+        /// Override with locked access
+        /// </summary>
         protected override void InsertItem(int index, T item)
         {
             lock (_syncCollection)
@@ -154,6 +157,9 @@ namespace PRF.Utils.WPF.CustomCollections
             }
         }
 
+        /// <summary>
+        /// Override with locked access
+        /// </summary>
         protected override void ClearItems()
         {
             lock (_syncCollection)
@@ -162,6 +168,9 @@ namespace PRF.Utils.WPF.CustomCollections
             }
         }
 
+        /// <summary>
+        /// Override with locked access
+        /// </summary>
         protected override void MoveItem(int oldIndex, int newIndex)
         {
             lock (_syncCollection)
@@ -170,6 +179,9 @@ namespace PRF.Utils.WPF.CustomCollections
             }
         }
 
+        /// <summary>
+        /// Override with locked access
+        /// </summary>
         protected override void RemoveItem(int index)
         {
             lock (_syncCollection)
@@ -178,6 +190,9 @@ namespace PRF.Utils.WPF.CustomCollections
             }
         }
 
+        /// <summary>
+        /// Override with locked access
+        /// </summary>
         protected override void SetItem(int index, T item)
         {
             lock (_syncCollection)
