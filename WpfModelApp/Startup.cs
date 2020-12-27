@@ -18,7 +18,10 @@ namespace WpfModelApp
                 var app = new App();
                 app.DispatcherUnhandledException += OnUnhandledException;
                 AppDomain.CurrentDomain.UnhandledException += AppDomainOnUnhandledException;
-                app.Exit += container.OnExit;
+                app.Exit += (sender, e) =>
+                {
+                    container.OnExit(sender, e);
+                };
                 app.InitializeComponent();
 
                 app.Run(container.Run());

@@ -1,6 +1,6 @@
 ﻿namespace WpfModelApp.Views
 {
-    internal partial class MainWindowView 
+    internal partial class MainWindowView
     {
         public MainWindowView(MainWindowViewModel dataContext)
         {

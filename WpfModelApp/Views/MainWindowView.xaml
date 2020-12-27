@@ -17,7 +17,7 @@
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}"
         Title="MainWindowView" Height="450" Width="800"
-        d:DataContext="{d:DesignInstance views:MainWindowViewModel, IsDesignTimeCreatable=true}">
+        d:DataContext="{d:DesignInstance views:MainWindowViewModel, IsDesignTimeCreatable=False}">
 
     <materialDesign:DrawerHost IsLeftDrawerOpen="{Binding ElementName=MenuToggleButton, Path=IsChecked}">
 
