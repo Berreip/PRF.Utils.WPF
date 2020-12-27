@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Threading;
 using NUnit.Framework;
 
 namespace PRF.Utils.WPF.UnitTest.NotifyTest
@@ -17,12 +18,24 @@ namespace PRF.Utils.WPF.UnitTest.NotifyTest
                 Notify();
             }
         }
+
+
+        private bool _property2;
+
+        public bool Property2
+        {
+            get => _property2;
+            set
+            {
+                SetProperty(ref _property2, value);
+            }
+        }
     }
 
     [TestFixture]
     public class NotifyTest
     {
-        private TestNotifierBaseClass _instance;
+        private TestNotifierBaseClass _sut;
 
         [SetUp]
         public void TestInitialize()
@@ -30,29 +43,56 @@ namespace PRF.Utils.WPF.UnitTest.NotifyTest
             // mock:
 
             // instance de test:
-            _instance = new TestNotifierBaseClass();
+            _sut = new TestNotifierBaseClass();
         }
 
-        /// <summary>
-        /// Cas 1: test performance
-        /// </summary>
         [Test]
-        public void NotifyV1()
+        public void Notify_Nominal()
         {
             //Configuration
-            const int upper = 5_000;
+            var count = 0;
+            _sut.PropertyChanged += (s, p) => Interlocked.Increment(ref count);
 
             //Test
-            var watch = Stopwatch.StartNew();
-            for (int i = 0; i < upper; i++)
+            for (int i = 0; i < 5; i++)
             {
-                _instance.Property++;
+                _sut.Property = i;
             }
-            watch.Stop();
 
             //Verify
-            Assert.IsTrue(watch.Elapsed < TimeSpan.FromMilliseconds(500), $"trop long: {watch.ElapsedMilliseconds} ms");
-            
+            Assert.AreEqual(5, count);
+            Assert.AreEqual(4, _sut.Property);
+        }
+
+        [Test]
+        public void SetProperty_Nominal()
+        {
+            //Configuration
+            var count = 0;
+            _sut.PropertyChanged += (s, p) => Interlocked.Increment(ref count);
+
+            //Test
+            _sut.Property2 = true;
+
+            //Verify
+            Assert.AreEqual(1, count);
+            Assert.IsTrue(_sut.Property2);
+        }
+
+        [Test]
+        public void SetProperty_Nominal_Multiple()
+        {
+            //Configuration
+            var count = 0;
+            _sut.PropertyChanged += (s, p) => Interlocked.Increment(ref count);
+
+            //Test
+            _sut.Property2 = true;
+            _sut.Property2 = true;
+
+            //Verify
+            Assert.AreEqual(1, count);
+            Assert.IsTrue(_sut.Property2);
         }
 
 

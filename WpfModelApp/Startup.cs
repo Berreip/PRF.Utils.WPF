@@ -16,12 +16,11 @@ namespace WpfModelApp
             {
                 var container = new ModelAppBoot();
                 var app = new App();
+                //close the app when the main window is closed (default value is lastWindow)
+                app.ShutdownMode = ShutdownMode.OnMainWindowClose;
                 app.DispatcherUnhandledException += OnUnhandledException;
                 AppDomain.CurrentDomain.UnhandledException += AppDomainOnUnhandledException;
-                app.Exit += (sender, e) =>
-                {
-                    container.OnExit(sender, e);
-                };
+                app.Exit += container.OnExit;
                 app.InitializeComponent();
 
                 app.Run(container.Run());

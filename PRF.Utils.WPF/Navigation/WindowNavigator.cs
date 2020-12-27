@@ -146,39 +146,36 @@ namespace PRF.Utils.WPF.Navigation
 
         private static void OnPanelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is not ContentControl content ||
-                e.NewValue is not NavigablePanelDependencyData dependencyData) return;
-
-            try
-            {
-                INavigableView previousNavigableView = null;
-                if (content.HasContent && content.Content is INavigableView pView)
+            if (d is ContentControl content && e.NewValue is NavigablePanelDependencyData dependencyData) try
                 {
-                    previousNavigableView = pView;
-
-                    // dans le cas où l'on souhaite naviguer vers la page elle même, on ne CHANGE PAS la page mais on appele 
-                    // la méthode NavigateToItSelfRequested et on quitte
-                    if (previousNavigableView.GetType() == dependencyData.ViewType)
+                    INavigableView previousNavigableView = null;
+                    if (content.HasContent && content.Content is INavigableView pView)
                     {
-                        previousNavigableView.NavigateToItSelfRequested();
-                        return;
+                        previousNavigableView = pView;
+
+                        // dans le cas où l'on souhaite naviguer vers la page elle même, on ne CHANGE PAS la page mais on appele 
+                        // la méthode NavigateToItSelfRequested et on quitte
+                        if (previousNavigableView.GetType() == dependencyData.ViewType)
+                        {
+                            previousNavigableView.NavigateToItSelfRequested();
+                            return;
+                        }
                     }
+
+                    var navigableView = ContainerHolder.Container.Resolve<INavigableView>(dependencyData.ViewType);
+
+                    // préviens la nouvelle vue que l'on y rentre
+                    navigableView.NavigateToCurrentRequested();
+                    // set le contenu:
+                    content.Content = navigableView;
+
+                    // préviens l'ancienne vue que l'on la quitte (après qu'elle ne soit plus affichée)
+                    previousNavigableView?.NavigateFromCurrentRequested();
                 }
-
-                var navigableView = ContainerHolder.Container.Resolve<INavigableView>(dependencyData.ViewType);
-
-                // préviens la nouvelle vue que l'on y rentre
-                navigableView.NavigateToCurrentRequested();
-                // set le contenu:
-                content.Content = navigableView;
-
-                // préviens l'ancienne vue que l'on la quitte (après qu'elle ne soit plus affichée)
-                previousNavigableView?.NavigateFromCurrentRequested();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"ERREUR: {ex}");
-            }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"ERREUR: {ex}");
+                }
         }
 
     }
