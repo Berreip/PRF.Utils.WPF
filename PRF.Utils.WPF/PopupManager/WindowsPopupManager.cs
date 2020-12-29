@@ -12,7 +12,7 @@ namespace PRF.Utils.WPF.PopupManager
     /// <summary>
     /// Module de gestion des fenêtres
     /// </summary>
-    public interface IWindowsPopupManager<in TWindowKey> where TWindowKey : Enum
+    public interface IWindowsPopupManager<in TWindowKey>
     {
         /// <summary>
         /// Demande la fermeture de la fenêtre assossié au viewModel
@@ -50,7 +50,7 @@ namespace PRF.Utils.WPF.PopupManager
     }
 
     /// <inheritdoc />
-    public sealed class WindowsPopupManager<TWindowKey> : IWindowsPopupManager<TWindowKey> where TWindowKey : Enum
+    public sealed class WindowsPopupManager<TWindowKey> : IWindowsPopupManager<TWindowKey>
     {
         private readonly IInjectionContainer _container;
         private readonly Dictionary<IPopupWindowsViewModel, WindowWrapper> _refWindowByViewModel
@@ -205,25 +205,27 @@ namespace PRF.Utils.WPF.PopupManager
                 {
                     // sur fermeture de la fenêtre, on appelle la méthode OnClose du viewModel et on désabonne
                     var window = (Window)sender;
-                    if (!(window.DataContext is IPopupWindowsViewModel viewModel))
+                    if (window.DataContext is IPopupWindowsViewModel viewModel)
+                    {
+                        // si on a pas déjà retiré le view model du dictionnaire de référence, on le fait et on désabonne
+                        if (!_refWindowByViewModel.TryGetValue(viewModel, out var wrapper)) return;
+
+                        _refWindowByViewModel.Remove(viewModel);
+                        // retire éventuellement la fenêtre si elle est en mode TransientSingle
+                        _alreadyCreatedSingleWindows.Remove(wrapper.Name);
+
+                        // on désabonne
+                        window.Closed -= OnWindowClosed;
+
+                        // Appelle la méthode OnClose du viewModel
+                        viewModel.OnClose();
+                        // important: Memoryleak: détache manuellement le datacontext
+                        window.DataContext = null;
+                    }
+                    else
                     {
                         throw new InvalidOperationException($"la fenêtre {window.GetType().Name} a un ViewModel qui n'est pas un {nameof(IPopupWindowsViewModel)}");
                     }
-
-                    // si on a pas déjà retiré le view model du dictionnaire de référence, on le fait et on désabonne
-                    if (!_refWindowByViewModel.TryGetValue(viewModel, out var wrapper)) return;
-
-                    _refWindowByViewModel.Remove(viewModel);
-                    // retire éventuellement la fenêtre si elle est en mode TransientSingle
-                    _alreadyCreatedSingleWindows.Remove(wrapper.Name);
-
-                    // on désabonne
-                    window.Closed -= OnWindowClosed;
-
-                    // Appelle la méthode OnClose du viewModel
-                    viewModel.OnClose();
-                    // important: Memoryleak: détache manuellement le datacontext
-                    window.DataContext = null;
                 }
             }
             catch (Exception ex)
