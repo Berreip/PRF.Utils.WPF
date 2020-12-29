@@ -52,7 +52,7 @@
     <PackageReference Include="Castle.Core" Version="4.4.1" />
     <PackageReference Include="MaterialDesignColors" Version="1.2.7" />
     <PackageReference Include="MaterialDesignThemes" Version="3.2.0" />
-    <PackageReference Include="PRF.Utils.CoreComponents" Version="1.0.5" />
+    <PackageReference Include="PRF.Utils.CoreComponents" Version="1.0.6" />
     <PackageReference Include="PRF.Utils.Injection" Version="1.0.3" />
   </ItemGroup>
   <ItemGroup>

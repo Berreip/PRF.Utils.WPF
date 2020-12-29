@@ -37,20 +37,20 @@ namespace WpfModelApp.Views.MainView.View1
         {
             IsRunning = true;
             var limit = Limit;
-            await WrapperCore.WrapAsync(() => _backingCollection.AddRange(Enumerable.Range(0, limit).Select(o => Guid.NewGuid())), () => IsRunning = false);
+            await WrapperCoreMessageBox.DispatchAndWrapAsync(() => _backingCollection.AddRange(Enumerable.Range(0, limit).Select(o => Guid.NewGuid())), () => IsRunning = false);
         }
 
         private async void ExecuteResetCommand()
         {
             IsRunning = true;
-            await WrapperCore.WrapAsync(() => _backingCollection.Clear(), () => IsRunning = false);
+            await WrapperCoreMessageBox.DispatchAndWrapAsync(() => _backingCollection.Clear(), () => IsRunning = false);
         }
 
         private async void ExecuteStartAddCommand()
         {
             IsRunning = true;
             var limit = Limit;
-            await WrapperCore.WrapAsync(() =>
+            await WrapperCoreMessageBox.DispatchAndWrapAsync(() =>
             {
                 for (int i = 0; i < limit; i++)
                 {
