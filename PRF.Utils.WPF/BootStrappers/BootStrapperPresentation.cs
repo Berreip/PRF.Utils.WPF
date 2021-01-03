@@ -47,8 +47,9 @@ namespace PRF.Utils.WPF.BootStrappers
         where TMainViewModel : NotifierBase
     {
         private readonly CancellationTokenSource _cts = new CancellationTokenSource();
-        private IInjectionContainer _container;
+        private readonly InjectionContainer _container = new InjectionContainer();
         private readonly object _key = new object();
+        private bool _hasbeenRun;
 
         /// <summary>
         /// Démarre le bootStrapper en créant un nouveau container d'injection
@@ -57,7 +58,12 @@ namespace PRF.Utils.WPF.BootStrappers
         {
             lock (_key)
             {
-                _container = new InjectionContainer();
+                if (_hasbeenRun)
+                {
+                    return _container.Resolve<TMainWindow>();
+                }
+                _hasbeenRun = true;
+
                 _container.ResolveUnregisteredType += ResolveUnregisteredType;
 
                 // enregistre cette instance en accès statique
@@ -80,6 +86,15 @@ namespace PRF.Utils.WPF.BootStrappers
                 // et enfin la vue principale
                 return _container.Resolve<TMainWindow>();
             }
+        }
+
+        /// <summary>
+        /// Do a full Verification of the container by reslving every registered type. Do this only in UnitTest
+        /// </summary>
+        public string Verify()
+        {
+            Run();
+            return _container.Verify();
         }
 
         /// <summary>

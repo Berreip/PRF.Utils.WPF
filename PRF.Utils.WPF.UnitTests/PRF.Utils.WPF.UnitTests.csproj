@@ -29,4 +29,9 @@
   <ItemGroup>
     <ProjectReference Include="..\PRF.Utils.WPF\PRF.Utils.WPF.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
 </Project>
