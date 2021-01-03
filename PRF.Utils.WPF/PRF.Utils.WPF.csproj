@@ -6,7 +6,7 @@
     <Product>PRF.Utils.WPF</Product>
     <Description>Provide basic classes for WPF application as well as built-in converters, validations rules, tree helpers, etc.</Description>
     <Copyright>PRF</Copyright>
-    <Version>1.0.6</Version>
+    <Version>1.0.7</Version>
     <DocumentationFile>bin\$(Configuration)\PRF.Utils.WPF.xml</DocumentationFile>
     <LangVersion>latest</LangVersion>
     <Authors>P. Bony</Authors>
@@ -18,7 +18,7 @@
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     <PackageIcon>PRF_Core_Component_Icon.png</PackageIcon>
     <PackageProjectUrl>https://github.com/Berreip/PRF.Utils.WPF</PackageProjectUrl>
-    <AssemblyVersion>1.0.6.0</AssemblyVersion>
+    <AssemblyVersion>1.0.7.0</AssemblyVersion>
     <FileVersion>1.0.6.0</FileVersion>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>

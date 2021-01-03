@@ -39,7 +39,7 @@ namespace WpfModelApp.Navigation
             _commandsObs.Add(AddNavigationView<View2View>("Vue 2"));
             foreach (var cmd in _commandsObs)
             {
-                cmd.PropertyChanged += OnPropertyChanged;
+                cmd.IsSelectedChanged += OnSelectionChanged;
             }
         }
 
@@ -50,10 +50,8 @@ namespace WpfModelApp.Navigation
             set => SetProperty(ref _displayMenu, value);
         }
 
-        private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void OnSelectionChanged(bool isSelected)
         {
-            if (sender == null || e.PropertyName != nameof(INavigationCommand.IsSelected)) return;
-
             ShouldDisplayMenu = false;
         }
 
@@ -61,7 +59,7 @@ namespace WpfModelApp.Navigation
         {
             foreach (var cmd in _commandsObs)
             {
-                cmd.PropertyChanged -= OnPropertyChanged;
+                cmd.IsSelectedChanged -= OnSelectionChanged;
             }
         }
     }

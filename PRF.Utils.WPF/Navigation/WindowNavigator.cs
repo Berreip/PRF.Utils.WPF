@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using PRF.Utils.WPF.BootStrappers;
+using PRF.Utils.WPF.Commands;
 
 namespace PRF.Utils.WPF.Navigation
 {
@@ -49,11 +50,11 @@ namespace PRF.Utils.WPF.Navigation
         /// <param name="canExecute">la condition d'execution éventuelle</param>
         protected INavigationCommand AddNavigationView<T>(string commandName, Func<bool> canExecute = null) where T : INavigableView
         {
-            var navigationCommand = new NavigationCommand<T>(commandName, UpdateNavigablePanelData, canExecute);
+            var navigationCommand = new NavigationCommand(typeof(T), commandName, UpdateNavigablePanelData, canExecute);
             _commandsReference.Add(typeof(T), navigationCommand);
             return navigationCommand;
         }
-
+        
         /// <inheritdoc/>
         public void NavigateToFirstView()
         {
@@ -112,6 +113,49 @@ namespace PRF.Utils.WPF.Navigation
 
         /// <inheritdoc/>
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        
+        private sealed class NavigationCommand : NotifierBase, INavigationCommand
+        {
+            private bool _isSelected;
+
+            public event Action<bool> IsSelectedChanged;
+
+            public NavigationCommand(Type navigationViewType, string name, Action<Type> execute, Func<bool> canExecute = null)
+            {
+                Name = name;
+                RegisteredType = navigationViewType;
+                Command = canExecute == null
+                    ? new DelegateCommandLight(() => execute(RegisteredType))
+                    : new DelegateCommandLight(() => execute(RegisteredType), canExecute);
+            }
+
+            /// <inheritdoc />
+            public IDelegateCommandLight Command { get; }
+
+            /// <inheritdoc />
+            public string Name { get; }
+
+            /// <inheritdoc />
+            public Type RegisteredType { get; }
+
+            /// <inheritdoc />
+            public bool IsSelected
+            {
+                get => _isSelected;
+                set
+                {
+                    if (SetProperty(ref _isSelected, value))
+                    {
+                        RaiseIsSelectedChanged(value);
+                    }
+                }
+            }
+
+            private void RaiseIsSelectedChanged(bool isSelected)
+            {
+                IsSelectedChanged?.Invoke(isSelected);
+            }
+        }
     }
 
 
