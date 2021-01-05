@@ -1,0 +1,87 @@
+﻿<Window x:Class="WpfModelApp.WPFCore.Views.MainWindowView"
+        x:ClassModifier="internal"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Icon="../Config/Ncrow-Mega-Pack-1-Virtual-CloneDrive.ico"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:navigation="clr-namespace:PRF.WPFCore.Navigation;assembly=PRF.WPFCore"
+        xmlns:views="clr-namespace:WpfModelApp.WPFCore.Views"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal"
+        TextOptions.TextRenderingMode="Auto"
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}"
+        Title="MainWindowView" Height="450" Width="800"
+        d:DataContext="{d:DesignInstance views:MainWindowViewModel, IsDesignTimeCreatable=False}">
+
+    <materialDesign:DrawerHost IsLeftDrawerOpen="{Binding ElementName=MenuToggleButton, Path=IsChecked}">
+
+        <!--Le panneau de menu-->
+        <materialDesign:DrawerHost.LeftDrawerContent>
+            <DockPanel MinWidth="150">
+                <ToggleButton Style="{StaticResource MaterialDesignHamburgerToggleButton}"
+                              DockPanel.Dock="Top"
+                              HorizontalAlignment="Right" Margin="16"
+                              IsChecked="{Binding ElementName=MenuToggleButton, Path=IsChecked, Mode=TwoWay}" />
+
+                <!--La liste des bouttons de navigation vers des panels de la liste de panel principale-->
+                <ItemsControl ItemsSource="{Binding MainPanelNavigation.Commands}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <RadioButton GroupName="MainButtons"
+                                         d:DataContext="{d:DesignInstance d:Type=navigation:INavigationCommand}"
+                                         Style="{StaticResource MaterialDesignTabRadioButton}"
+                                         Content="{Binding Name}"
+                                         Command="{Binding Command}"
+                                         CommandParameter="{Binding . }"
+                                         IsChecked="{Binding IsSelected}" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </DockPanel>
+        </materialDesign:DrawerHost.LeftDrawerContent>
+
+        <!--Contenu-->
+        <DockPanel>
+            <materialDesign:ColorZone Padding="16" materialDesign:ShadowAssist.ShadowDepth="Depth2" Mode="PrimaryMid"
+                                      DockPanel.Dock="Top">
+                <DockPanel>
+                    <ToggleButton x:Name="MenuToggleButton"
+                                  Style="{StaticResource MaterialDesignHamburgerToggleButton}"
+                                  IsChecked="{Binding MainPanelNavigation.ShouldDisplayMenu}" />
+                    <materialDesign:PopupBox DockPanel.Dock="Right" PlacementMode="BottomAndAlignRightEdges"
+                                             StaysOpen="False">
+                        <StackPanel>
+                            <Button Content="Popup ShowDialog" Command="{Binding OpenPopup1ShowDialogCommand}" />
+                            <Button Content="Popup Show" Command="{Binding OpenPopup1ShowCommand}" />
+                            <Button Content="Rien disabled!" IsEnabled="False" />
+                            <Separator />
+                            <Button Content="après séparateur" />
+                        </StackPanel>
+                    </materialDesign:PopupBox>
+                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="22">App Title</TextBlock>
+                </DockPanel>
+            </materialDesign:ColorZone>
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="100" />
+                </Grid.ColumnDefinitions>
+                <!-- Panel principal-->
+                <ContentControl Grid.Column="0"
+                                navigation:PanelWindowResolver.Panel="{Binding MainPanelNavigation.NavigablePanelData}" />
+
+                <!-- Panel secondaire-->
+                <ContentControl Grid.Column="1"
+                                navigation:PanelWindowResolver.Panel="{Binding SecondaryPanelNavigation.NavigablePanelData}" />
+            </Grid>
+
+        </DockPanel>
+    </materialDesign:DrawerHost>
+</Window>

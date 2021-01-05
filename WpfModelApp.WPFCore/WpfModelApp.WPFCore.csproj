@@ -1,0 +1,48 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <StartupObject>WpfModelApp.WPFCore.Startup</StartupObject>
+    <ApplicationIcon>Ncrow-Mega-Pack-1-Virtual-CloneDrive.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Config\Ncrow-Mega-Pack-1-Virtual-CloneDrive.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MaterialDesignColors" Version="1.2.7" />
+    <PackageReference Include="MaterialDesignThemes" Version="3.2.0" />
+    <PackageReference Include="PRF.Utils.CoreComponents" Version="1.0.6" />
+    <PackageReference Include="PRF.Utils.Injection" Version="1.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PRF.WPFCore\PRF.WPFCore.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Config\Ncrow-Mega-Pack-1-Virtual-CloneDrive.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Views\MainView\View1\View1View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="Views\MainView\View2\View2View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="Views\MainWindowView.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="Views\Popups\Popup1\Popup1View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="Views\SecondaryView\SecondaryView1\Secondary1View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+  </ItemGroup>
+
+</Project>
