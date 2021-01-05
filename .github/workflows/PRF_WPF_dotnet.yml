@@ -29,3 +29,8 @@ jobs:
       with:
         PROJECT_FILE_PATH: PRF.Utils.WPF/PRF.Utils.WPF.csproj
         NUGET_KEY: ${{secrets.NUGET_KEY}}
+    - name: Publish PRF.WPFCore to Nuget
+      uses: brandedoutcast/publish-nuget@v2
+      with:
+        PROJECT_FILE_PATH: PRF.WPFCore/PRF.WPFCore.csproj
+        NUGET_KEY: ${{secrets.NUGET_KEY}}
