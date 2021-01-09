@@ -85,7 +85,7 @@ namespace PRF.WPFCore.PopupManager
                 if (viewModelReference == null || !_refWindowByViewModel.TryGetValue(viewModelReference, out view)) return;
             }
 
-            await UiThreadDispatcher.DispatchAsync(() =>
+            await UiThreadDispatcher.ExecuteOnUIAsync(() =>
             {
                 // déclenche la fermeture de la fenêtre (qui lèvera l'evènement OnWindowClosed qui appelera
                 // à son tour la méthode OnClose() du ViewModel)

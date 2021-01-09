@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using PRF.Utils.CoreComponents.Async;
 using PRF.Utils.Injection.Containers;
 using PRF.Utils.Injection.Utils;
+using PRF.Utils.WPF.Helpers;
 using PRF.Utils.WPF.UiWorkerThread;
 
 namespace PRF.Utils.WPF.PopupManager
@@ -85,7 +87,7 @@ namespace PRF.Utils.WPF.PopupManager
                 if (viewModelReference == null || !_refWindowByViewModel.TryGetValue(viewModelReference, out view)) return;
             }
 
-            await UiThreadDispatcher.DispatchAsync(() =>
+            await UiThreadDispatcher.ExecuteOnUIAsync(() =>
             {
                 // déclenche la fermeture de la fenêtre (qui lèvera l'evènement OnWindowClosed qui appelera
                 // à son tour la méthode OnClose() du ViewModel)

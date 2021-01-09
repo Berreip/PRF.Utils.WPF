@@ -12,61 +12,126 @@ using System.Windows.Threading;
 namespace PRF.Utils.WPF.UiWorkerThread
 {
     /// <summary>
-    /// Classe de dispatch des action dans le thread UI
+    /// Class that allow dispatching on UIThread, either sync or async with checking that we are already in the UIThread
     /// </summary>
     public static class UiThreadDispatcher
     {
         /// <summary>
-        ///  Execute une action dans le thread d'affichage en synchrone
+        /// Execute a sync callback on the UIThread. 
         /// </summary>
-        /// <param name="action"> l'action à exécuter </param>
-        /// <param name="prio"> la priorité de dispatch (ne modifier qu'en connaissance de cause)</param>
-        public static void Dispatch(Action action, DispatcherPriority prio = DispatcherPriority.Normal)
+        public static void ExecuteOnUI(Action action, DispatcherPriority prio = DispatcherPriority.Normal)
         {
             var uiThread = Application.Current != null ? Application.Current.Dispatcher : Dispatcher.CurrentDispatcher;
-
-            if (uiThread.CheckAccess()) //if we are already in the UI thread, invoke action
+            if (uiThread?.CheckAccess() ?? true) //if we are already in the UI thread, invoke action
+            {
                 action();
+            }
             else
             {
                 //otherwise dispatch in the ui thread
                 uiThread.Invoke(action, prio);
             }
         }
-        
+
         /// <summary>
-        ///  Execute une action dans le thread d'affichage en asynchrone et donne la main pour récupérer le résultat
+        /// Execute a sync callback with returns on the UIThread.
         /// </summary>
-        /// <param name="func"> la Func à exécuter </param>
-        /// <param name="prio"> la priorité de dispatch (ne modifier qu'en connaissance de cause)</param>
-        public static async Task<T> DispatchAsyncWithReturn<T>(Func<T> func, DispatcherPriority prio = DispatcherPriority.Normal)
+        public static T ExecuteOnUI<T>(Func<T> callback, DispatcherPriority prio = DispatcherPriority.Normal)
         {
             var uiThread = Application.Current != null ? Application.Current.Dispatcher : Dispatcher.CurrentDispatcher;
-
-            //dispatch in the ui thread or invoke in current if already there
-            return uiThread.CheckAccess()
-                ? func()
-                : await uiThread.InvokeAsync(func, prio);
+            if (uiThread?.CheckAccess() ?? true) //if we are already in the UI thread, invoke action
+            {
+                return callback();
+            }
+            //otherwise dispatch in the ui thread
+            return uiThread.Invoke(callback, prio);
         }
 
         /// <summary>
-        ///  Execute une action dans le thread d'affichage en asynchrone et donne la main pour connaitre l'état de l'appel
+        /// Execute an async callback without returns on the UIThread.
         /// </summary>
-        /// <param name="action"> l'action à exécuter </param>
-        /// <param name="prio"> la priorité de dispatch (ne modifier qu'en connaissance de cause)</param>
-        public static async Task DispatchAsync(Action action, DispatcherPriority prio = DispatcherPriority.Normal)
+        public static async Task ExecuteOnUI(Func<Task> callback, DispatcherPriority prio = DispatcherPriority.Normal)
         {
             var uiThread = Application.Current != null ? Application.Current.Dispatcher : Dispatcher.CurrentDispatcher;
-
-            //dispatch in the ui thread or invoke in current if already there
-            if (uiThread.CheckAccess())
+            if (uiThread?.CheckAccess() ?? true)
             {
-                action();
+                await callback().ConfigureAwait(false);
             }
             else
             {
-                await uiThread.InvokeAsync(action, prio);
+                await uiThread.Invoke(callback, prio).ConfigureAwait(false);
             }
+        }
+
+        /// <summary>
+        /// Execute an async callback with returns on the UIThread.
+        /// </summary>
+        public static async Task<T> ExecuteOnUI<T>(Func<Task<T>> callback, DispatcherPriority prio = DispatcherPriority.Normal)
+        {
+            var uiThread = Application.Current != null ? Application.Current.Dispatcher : Dispatcher.CurrentDispatcher;
+            if (uiThread?.CheckAccess() ?? true)
+            {
+                return await callback().ConfigureAwait(false);
+            }
+            return await uiThread.Invoke(callback, prio).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Execute a sync action on the UI thread in an async call
+        /// </summary>
+        public static async Task ExecuteOnUIAsync(Action callback, DispatcherPriority prio = DispatcherPriority.Normal)
+        {
+            var uiThread = Application.Current != null ? Application.Current.Dispatcher : Dispatcher.CurrentDispatcher;
+            if (uiThread?.CheckAccess() ?? true)
+            {
+                callback();
+            }
+            else
+            {
+                await uiThread.InvokeAsync(callback, prio).Task.ConfigureAwait(false);
+            }
+        }
+        
+        /// <summary>
+        /// Execute a async action on the UI thread in an async call
+        /// </summary>
+        public static async Task ExecuteOnUIAsync(Func<Task> callback, DispatcherPriority prio = DispatcherPriority.Normal)
+        {
+            var uiThread = Application.Current != null ? Application.Current.Dispatcher : Dispatcher.CurrentDispatcher;
+            if (uiThread?.CheckAccess() ?? true)
+            {
+                await callback().ConfigureAwait(false);
+            }
+            else
+            {
+                await uiThread.InvokeAsync(callback, prio).Task.ConfigureAwait(false);
+            }
+        }
+
+        /// <summary>
+        /// Execute a sync func on the UI thread in an async call
+        /// </summary>
+        public static async Task<T> ExecuteOnUIAsync<T>(Func<T> callback, DispatcherPriority prio = DispatcherPriority.Normal)
+        {
+            var uiThread = Application.Current != null ? Application.Current.Dispatcher : Dispatcher.CurrentDispatcher;
+            if (uiThread?.CheckAccess() ?? true)
+            {
+                return callback();
+            }
+            return await uiThread.InvokeAsync(callback, prio).Task.ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Execute an async func on the UI thread in an async call
+        /// </summary>
+        public static async Task<T> ExecuteOnUIAsync<T>(Func<Task<T>> callback, DispatcherPriority prio = DispatcherPriority.Normal)
+        {
+            var uiThread = Application.Current != null ? Application.Current.Dispatcher : Dispatcher.CurrentDispatcher;
+            if (uiThread?.CheckAccess() ?? true)
+            {
+                return await callback().ConfigureAwait(false);
+            }
+            return await uiThread.InvokeAsync(callback, prio).Task.Unwrap().ConfigureAwait(false);
         }
     }
 }

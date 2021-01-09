@@ -21,7 +21,7 @@ namespace PRF.Utils.WPF.UiWorkerThread
         {
             try
             {
-                await UiThreadDispatcher.DispatchAsync(toDo).ConfigureAwait(false);
+                await UiThreadDispatcher.ExecuteOnUIAsync(toDo).ConfigureAwait(false);
             }
             catch (Exception e)
             {
@@ -52,7 +52,7 @@ namespace PRF.Utils.WPF.UiWorkerThread
         {
             try
             {
-                UiThreadDispatcher.Dispatch(toDo);
+                UiThreadDispatcher.ExecuteOnUI(toDo);
             }
             catch (Exception e)
             {

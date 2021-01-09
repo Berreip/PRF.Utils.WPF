@@ -89,7 +89,7 @@ namespace PRF.Utils.WPF.Commands
         /// <inheritdoc />
         public async Task RaiseCanExecuteChanged()
         {
-            await UiThreadDispatcher.DispatchAsync(() => CanExecuteChanged?.Invoke(this, EventArgs.Empty)).ConfigureAwait(false);
+            await UiThreadDispatcher.ExecuteOnUIAsync(() => CanExecuteChanged?.Invoke(this, EventArgs.Empty)).ConfigureAwait(false);
         }
 
         /// <inheritdoc />
