@@ -53,6 +53,7 @@ namespace PRF.Utils.WPF.UnitTests.BootStrappers
             //Verify
         }
 
+        // ReSharper disable once ClassNeverInstantiated.Local
         private class MissingRegisterType
         {
             public MissingRegisterType(IOtherUnknowType _) { }

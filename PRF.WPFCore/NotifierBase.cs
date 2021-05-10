@@ -51,7 +51,7 @@ namespace PRF.WPFCore
         /// </summary>
         protected bool SetProperty<T>(ref T oldValue, T newValue, [CallerMemberName] string propertyName = null)
         {
-            if (oldValue.Equals(newValue)) return false;
+            if (Equals(oldValue, newValue)) return false;
             oldValue = newValue;
             Notify(propertyName);
             return true;

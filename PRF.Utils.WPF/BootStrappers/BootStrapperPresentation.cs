@@ -168,7 +168,7 @@ namespace PRF.Utils.WPF.BootStrappers
         {
             try
             {
-                if (!LoadingTask.IsCompleted)
+                if (LoadingTask != null && !LoadingTask.IsCompleted)
                 {
                     _cts?.Cancel();
                     // le cts sera disposé dans le finally du chargement

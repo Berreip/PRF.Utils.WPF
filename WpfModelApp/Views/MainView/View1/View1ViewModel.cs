@@ -8,10 +8,11 @@ using PRF.Utils.WPF.Helpers;
 
 namespace WpfModelApp.Views.MainView.View1
 {
+    // ReSharper disable once ClassNeverInstantiated.Global
     internal class View1ViewModel : NotifierBase
     {
         private bool _isRunning;
-        private ObservableCollectionRanged<Guid> _backingCollection;
+        private readonly ObservableCollectionRanged<Guid> _backingCollection;
 
         public IDelegateCommandLight StartAddCommand { get; }
         public IDelegateCommandLight ResetCommand { get; }

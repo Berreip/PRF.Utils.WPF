@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
+using PRF.WPFCore.BootStrappers;
+using WpfModelApp.WPFCore.SplashScreen;
 
 namespace WpfModelApp.WPFCore
 {
@@ -10,25 +13,38 @@ namespace WpfModelApp.WPFCore
     internal static class Startup
     {
         [STAThread]
-        internal static void Main()
+        internal static int Main()
         {
             try
             {
                 var container = new ModelAppBoot();
-                var app = new App();
+                var app = new App(); // Application.Current.Dispatcher.Thread.ManagedThreadId; is set
+                
                 //close the app when the main window is closed (default value is lastWindow)
                 app.ShutdownMode = ShutdownMode.OnMainWindowClose;
                 app.DispatcherUnhandledException += OnUnhandledException;
                 AppDomain.CurrentDomain.UnhandledException += AppDomainOnUnhandledException;
+
+                var controller = new SplashController();
                 app.Exit += container.OnExit;
+                app.Startup += controller.OnStart;
                 app.InitializeComponent();
 
-                app.Run(container.Run());
+                var i = app.Run(container.RunWithSplashScreen<SplashScreenView>(controller, w => OnLoadingSuccessful(w, app)));
+                
+                return i;
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Unhandled Exception (will exit after close): {ex} ");
+                return -1;
             }
+        }
+
+        private static void OnLoadingSuccessful(Window mainWindow, App app)
+        {
+            app.MainWindow = mainWindow;
+            mainWindow.Show();
         }
 
         private static void AppDomainOnUnhandledException(object sender, UnhandledExceptionEventArgs e)

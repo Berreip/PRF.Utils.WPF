@@ -14,7 +14,7 @@ using WpfModelApp.Views.SecondaryView.SecondaryView1;
 
 namespace WpfModelApp
 {
-    internal class ModelAppBoot : BootStrapperPresentation<MainWindowView, MainWindowViewModel>
+    internal sealed class ModelAppBoot : BootStrapperPresentation<MainWindowView, MainWindowViewModel>
     {
         protected override void Register(IInjectionContainerRegister container)
         {

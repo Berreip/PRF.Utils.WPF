@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -58,36 +59,86 @@ namespace PRF.WPFCore.BootStrappers
         {
             lock (_key)
             {
-                if (_hasbeenRun)
+                if (TrySetRunningWindow(out var window))
                 {
-                    return _container.Resolve<TMainWindow>();
+                    return window;
                 }
-                _hasbeenRun = true;
-
-                _container.ResolveUnregisteredType += ResolveUnregisteredType;
-
-                // enregistre cette instance en accès statique
-                ContainerHolder.Container = _container;
-
-                //enregistre la vue, le viewModel et le traceur en singleton:
-                _container.RegisterType<TMainWindow>(LifeTime.Singleton);
-                _container.RegisterType<TMainViewModel>(LifeTime.Singleton);
-
-                //fait les enregistrements des autres composants
-                Register(_container);
-
-                // on initialise les composants
-                Initialize(_container);
-
-                // Il peut y avoir des données à charger au démarrage, on s'en occupe maintenant que les initializations sont terminées.
-                // ces données seront chargée en arrière plan
-                LoadingTask = LoadDataAsync(_cts.Token, GetLoaderMethods(_container));
+                ConfigureContainer();
 
                 // et enfin la vue principale
                 return _container.Resolve<TMainWindow>();
             }
         }
+        public Window RunWithSplashScreen<TSplash>(ISplashController splashController, Action<Window> onLoadingSuccessful) where TSplash : Window, ISplashScreen
+        {
+            lock (_key)
+            {
+                if (TrySetRunningWindow(out var window))
+                {
+                    return window;
+                }
+                ConfigureContainer();
 
+                // resolve the splash screen
+                var splash = _container.Resolve<TSplash>();
+                splashController.OnUpdateMessage += splash.UpdateMessage;
+                splashController.OnLoadingDoneSuccessfully += () =>
+                {
+                    var mainWindow = _container.Resolve<TMainWindow>();
+                    onLoadingSuccessful(mainWindow);
+                    splash.Close();
+                };
+                splashController.OnLoadingFailed += (e) =>
+                {
+                    Debug.Fail($"loading failed :{e}");
+                    splash.Close();
+                };
+                return splash;
+            }
+        }
+        private bool TrySetRunningWindow(out TMainWindow window)
+        {
+            if(_hasbeenRun)
+            {
+                window = _container.Resolve<TMainWindow>();
+                return true;
+            }
+            window = null;
+            return false;
+        }
+
+        private void ConfigureContainer()
+        {
+            // set the window
+            _hasbeenRun = true;
+            _container.ResolveUnregisteredType += ResolveUnregisteredType;
+
+            // enregistre cette instance en accès statique
+            ContainerHolder.Container = _container;
+
+            //enregistre la vue, le viewModel et le traceur en singleton:
+            _container.RegisterType<TMainWindow>(LifeTime.Singleton);
+            _container.RegisterType<TMainViewModel>(LifeTime.Singleton);
+
+            //fait les enregistrements des autres composants
+            Register(_container);
+
+            // on initialise les composants synchrones
+            Initialize(_container);
+        }
+
+     
+        //
+        // public async void OnStart(object sender, StartupEventArgs e)
+        // {
+        //     await Task.Delay(100);
+        //
+        //     // Il peut y avoir des données à charger au démarrage, on s'en occupe maintenant que les initializations sont terminées.
+        //     // ces données seront chargée en arrière plan
+        //     LoadingTask = LoadDataAsync(_cts.Token, GetLoaderMethods(_container));
+        //     await LoadingTask.ConfigureAwait(false);
+        // }
+        
         /// <summary>
         /// Do a full Verification of the container by reslving every registered type. Do this only in UnitTest
         /// </summary>
@@ -103,16 +154,6 @@ namespace PRF.WPFCore.BootStrappers
         protected abstract void ResolveUnregisteredType(object sender, Type type);
 
         /// <summary>
-        /// Liste des méthodes async à lancer en arrière plan au démarrage (après le register et en parallèle de l'affichage de la fenêtre principale)
-        ///  => pour les résolutions synchrones, privilégiez le Initialize().
-        /// </summary>
-        /// <returns>la liste de méthodes (async évidemment)</returns>
-        protected virtual IEnumerable<Func<CancellationToken, Task>> GetLoaderMethods(IInjectionContainer container)
-        {
-            return new Func<CancellationToken, Task>[0];
-        }
-
-        /// <summary>
         /// tache de chargement des données. à la fin du programme, on peut éventuellement annuler ce chargement. Dans tt les cas, 
         /// il faut attendre cette tache, au moins pour récupérer les éventuelles exception qu'elle aurait stockée
         /// </summary>
@@ -120,22 +161,7 @@ namespace PRF.WPFCore.BootStrappers
 
         private async Task LoadDataAsync(CancellationToken ctsToken, IEnumerable<Func<CancellationToken, Task>> loadingAsyncMethods)
         {
-            try
-            {
-                await Task.WhenAll(loadingAsyncMethods.Select(async t => await t.Invoke(ctsToken).ConfigureAwait(false))).ConfigureAwait(false);
-            }
-            catch (Exception e)
-            {
-                if (!ManageExceptionInLoading(e))
-                {
-                    throw;
-                }
-            }
-            finally
-            {
-                // dispose le CancellationTokenSource à la fin du traitement il doit être disposé.
-                _cts.Dispose();
-            }
+            
         }
 
         /// <summary>
@@ -168,7 +194,7 @@ namespace PRF.WPFCore.BootStrappers
         {
             try
             {
-                if (!LoadingTask.IsCompleted)
+                if (LoadingTask !=null && !LoadingTask.IsCompleted)
                 {
                     _cts?.Cancel();
                     // le cts sera disposé dans le finally du chargement
