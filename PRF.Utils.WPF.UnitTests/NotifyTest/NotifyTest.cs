@@ -30,6 +30,16 @@ namespace PRF.Utils.WPF.UnitTest.NotifyTest
                 SetProperty(ref _property2, value);
             }
         }
+        
+        
+        private string _propertyNullable;
+
+        public string PropertyNullable
+        {
+            get => _propertyNullable;
+            set => SetProperty(ref _propertyNullable, value);
+        }
+
     }
 
     [TestFixture]
@@ -95,6 +105,51 @@ namespace PRF.Utils.WPF.UnitTest.NotifyTest
             Assert.IsTrue(_sut.Property2);
         }
 
+        [Test]
+        public void SetProperty_Nullable_Nominal()
+        {
+            //Configuration
+            var count = 0;
+            _sut.PropertyChanged += (s, p) => Interlocked.Increment(ref count);
+
+            //Test
+            _sut.PropertyNullable = "niak";
+
+            //Verify
+            Assert.AreEqual(1, count);
+            Assert.AreEqual("niak", _sut.PropertyNullable);
+        }
+
+        [Test]
+        public void SetProperty_Nullable_Both_Null()
+        {
+            //Configuration
+            var count = 0;
+            _sut.PropertyChanged += (s, p) => Interlocked.Increment(ref count);
+
+            //Test
+            _sut.PropertyNullable = null;
+
+            //Verify
+            Assert.AreEqual(0, count); // was null at first
+            Assert.AreEqual(null, _sut.PropertyNullable);
+        }
+
+        [Test]
+        public void SetProperty_Nullable_From_AndTo_Null()
+        {
+            //Configuration
+            var count = 0;
+            _sut.PropertyChanged += (s, p) => Interlocked.Increment(ref count);
+
+            //Test
+            _sut.PropertyNullable = "niak";
+            _sut.PropertyNullable = null;
+
+            //Verify
+            Assert.AreEqual(2, count);
+            Assert.AreEqual(null, _sut.PropertyNullable);
+        }
 
     }
 }
