@@ -6,7 +6,7 @@ using WpfModelApp.WPFCore.Navigation;
 
 namespace WpfModelApp.WPFCore.Views
 {
-    internal class MainWindowViewModel : NotifierBase
+    internal class MainWindowViewModel : ViewModelBase
     {
         private readonly IWindowsPopupManager<WpfModelAppEnumWindow> _windowsPopupManager;
 

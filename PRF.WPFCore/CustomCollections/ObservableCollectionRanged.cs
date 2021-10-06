@@ -16,12 +16,37 @@ using System.Windows.Threading;
 
 namespace PRF.WPFCore.CustomCollections
 {
+    public interface IObservableCollectionRanged<T> : IList<T>, IReadOnlyList<T>, INotifyCollectionChanged, INotifyPropertyChanged
+    {
+        /// <summary>
+        /// Ajoute tous les éléments fournis avec une seule notification finale
+        /// </summary>
+        /// <param name="items">la liste des éléments à ajouter</param>
+        void AddRange(IEnumerable<T> items);
+
+        /// <summary>
+        /// Nettoie la collection et lui ajoute tous les éléments fournis (avec une seule notification finale)
+        /// </summary>
+        /// <param name="items">la liste des éléments à ajouter après le nettoyage</param>
+        void Reset(IEnumerable<T> items);
+
+        /// <summary>
+        /// Ajoute les éléments demandés en gérant le différentiel (les éléments manquant sont ajouté,
+        ///  les éléments en trop sont retirés, les autres sont laissé tel quel)
+        /// </summary>
+        /// <param name="elementsToAdd">la liste </param>
+        void AddRangeDifferential(IEnumerable<T> elementsToAdd);
+        
+        new int Count { get; }
+        new T this[int index] { get; set; }
+    }
+
     /// <summary>
     /// Représente une implémentation de l'ObservableCollection qui supporte l'ajout ou le retrait d'un ensemble d'éléments sans notifier pour chacun 
     /// d'entre eux mais seulement une seule fois.
     /// </summary>
-    public class ObservableCollectionRanged<T> : ObservableCollection<T>
-    {
+    public class ObservableCollectionRanged<T> : ObservableCollection<T>, IObservableCollectionRanged<T>
+    {  
         private readonly object _syncCollection = new object();
 
         /// <summary>
@@ -114,6 +139,7 @@ namespace PRF.WPFCore.CustomCollections
             }
             NotifyReset();
         }
+        
         /// <summary>
         /// Add range without notification (to avoid a lock on Notify)
         /// </summary>
@@ -124,7 +150,7 @@ namespace PRF.WPFCore.CustomCollections
                 Items.Add(item);
             }
         }
-
+        
         private void NotifyReset()
         {
             OnPropertyChanged(new PropertyChangedEventArgs(nameof(Count)));

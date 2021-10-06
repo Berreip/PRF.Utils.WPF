@@ -20,7 +20,7 @@ namespace PRF.WPFCore
         /// <summary>
         /// Notifie un changement de valeur d'une propriété notifiable
         /// </summary>
-        protected void Notify([CallerMemberName] string propertyName = null)
+        protected void RaisePropertyChanged([CallerMemberName] string propertyName = null)
         {
             InvokeProperty(new PropertyChangedEventArgs(propertyName));
         }

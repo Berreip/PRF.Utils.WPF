@@ -44,7 +44,7 @@ namespace PRF.WPFCore.BootStrappers
     /// <typeparam name="TMainViewModel">le type du viewModel lié à la fenetre principale</typeparam>
     public abstract class BootStrapperPresentation<TMainWindow, TMainViewModel>
         where TMainWindow : Window
-        where TMainViewModel : NotifierBase
+        where TMainViewModel : ViewModelBase
     {
         private readonly CancellationTokenSource _cts = new CancellationTokenSource();
         private readonly InjectionContainer _container = new InjectionContainer();

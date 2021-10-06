@@ -135,7 +135,7 @@ namespace PRF.WPFCore.PopupManager
             where T : class, IPopupWindowsViewModel
         {
             if (TryGetType(name, out var refWindow)) return;
-            WrapperCoreUI.DispatchAsync(() => CreateViewAndViewModel(name, refWindow, loadAction).Show()).ConfigureAwait(false);
+            AsyncWrapperUi.DispatchUiAndWrapAsync(() => CreateViewAndViewModel(name, refWindow, loadAction).Show()).ConfigureAwait(false);
         }
 
         /// <inheritdoc />
@@ -149,7 +149,7 @@ namespace PRF.WPFCore.PopupManager
             where T : class, IPopupWindowsViewModel
         {
             if (TryGetType(name, out var refWindow)) return;
-            WrapperCoreUI.Dispatch(() => CreateViewAndViewModel(name, refWindow, loadAction).ShowDialog());
+            AsyncWrapperUi.DispatchUiAndWrap(() => CreateViewAndViewModel(name, refWindow, loadAction).ShowDialog());
         }
 
         private bool TryGetType(TWindowKey name, out RegistrationWindowsReference refWindow)
@@ -158,7 +158,6 @@ namespace PRF.WPFCore.PopupManager
 
             MessageBox.Show($"@Erreur: impossible de trouver une fenêtre enregistrée avec le nom {name}");
             return true;
-
         }
 
         private Window CreateViewAndViewModel<T>(TWindowKey name, RegistrationWindowsReference refWindow,

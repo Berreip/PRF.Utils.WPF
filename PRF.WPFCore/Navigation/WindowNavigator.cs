@@ -36,7 +36,7 @@ namespace PRF.WPFCore.Navigation
     }
 
     /// <inheritdoc cref="IWindowNavigator" />
-    public abstract class WindowNavigator : NotifierBase, IWindowNavigator
+    public abstract class WindowNavigator : ViewModelBase, IWindowNavigator
     {
         private readonly Dictionary<Type, INavigationCommand> _commandsReference = new Dictionary<Type, INavigationCommand>();
         private readonly object _key = new object();
@@ -104,7 +104,7 @@ namespace PRF.WPFCore.Navigation
             private set
             {
                 _navigablePanelData = value;
-                Notify();
+                RaisePropertyChanged();
             }
         }
 
@@ -114,7 +114,7 @@ namespace PRF.WPFCore.Navigation
         /// <inheritdoc/>
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         
-        private sealed class NavigationCommand : NotifierBase, INavigationCommand
+        private sealed class NavigationCommand : ViewModelBase, INavigationCommand
         {
             private bool _isSelected;
 

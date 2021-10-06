@@ -8,7 +8,7 @@ using PRF.WPFCore.Helpers;
 
 namespace WpfModelApp.WPFCore.Views.MainView.View1
 {
-    internal class View1ViewModel : NotifierBase
+    internal class View1ViewModel : ViewModelBase
     {
         private bool _isRunning;
         private readonly ObservableCollectionRanged<Guid> _backingCollection;
@@ -66,7 +66,7 @@ namespace WpfModelApp.WPFCore.Views.MainView.View1
             {
                 if (_isRunning == value) return;
                 _isRunning = value;
-                Notify();
+                RaisePropertyChanged();
                 ResetCommand.RaiseCanExecuteChanged();
                 StartAddCommand.RaiseCanExecuteChanged();
                 StartAddRangeCommand.RaiseCanExecuteChanged();

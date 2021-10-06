@@ -36,7 +36,7 @@ namespace PRF.WPFCore.Commands
     /// <summary>
     /// basic commands with parameter
     /// </summary>
-    public interface IDelegateCommandLight<T> : IDelegateCommandLightBase
+    public interface IDelegateCommandLight<in T> : IDelegateCommandLightBase
     {
         /// <summary>
         /// CanExecute with the correct expected type
@@ -100,7 +100,7 @@ namespace PRF.WPFCore.Commands
         public event EventHandler CanExecuteChanged;
     }
 
-    /// <inheritdoc />
+    /// <inheritdoc cref="DelegateCommandLightBase" />
     public abstract class DelegateCommandLightWithoutParameterBase : DelegateCommandLightBase, IDelegateCommandLight
     {
         private readonly Func<bool> _canExecute;
@@ -126,7 +126,7 @@ namespace PRF.WPFCore.Commands
         public override void Execute(object parameter) => Execute();
     }
 
-    /// <inheritdoc />
+    /// <inheritdoc cref="DelegateCommandLightBase" />
     public abstract class DelegateCommandLightWithParameterBase<T> : DelegateCommandLightBase, IDelegateCommandLight<T>
     {
         private readonly Func<T, bool> _canExecute;

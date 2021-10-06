@@ -8,11 +8,11 @@ using System.Runtime.CompilerServices;
 namespace PRF.WPFCore
 {
     /// <summary>
-    /// Classe de base pour toutes les classes notifiantes. 
+    /// Base class for all viewModel. In order to avoid memory leak, it is advised to 
     /// Afin d'eviter les fuites mémoires, il est conseillé de dériver de cette classe dans tous les ViewModel et tous les adapteurs
     /// (ou d'implémenter INotifyPropertyChanged)
     /// </summary>
-    public abstract class NotifierBase : INotifyPropertyChanged
+    public abstract class ViewModelBase : INotifyPropertyChanged
     {
         private readonly HashSet<string> _propertyHash;
 
@@ -25,7 +25,7 @@ namespace PRF.WPFCore
         /// <summary>
         /// Constructeur
         /// </summary>
-        protected NotifierBase()
+        protected ViewModelBase()
         {
             // stocke les propriétés à la construction pour la vérification:
             _propertyHash = GetType()
@@ -37,7 +37,7 @@ namespace PRF.WPFCore
         /// <summary>
         /// Notifie un changement de valeur d'une propriété notifiable
         /// </summary>
-        protected void Notify([CallerMemberName] string propertyName = null)
+        protected void RaisePropertyChanged([CallerMemberName] string propertyName = null)
         {
             if (!_propertyHash.Contains(propertyName))
             {
@@ -60,7 +60,7 @@ namespace PRF.WPFCore
                 return false;
             }
             oldValue = newValue;
-            Notify(propertyName);
+            RaisePropertyChanged(propertyName);
             return true;
         }
 

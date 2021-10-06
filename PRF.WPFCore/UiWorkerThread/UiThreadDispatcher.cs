@@ -12,7 +12,7 @@ using System.Windows.Threading;
 namespace PRF.WPFCore.UiWorkerThread
 {
     /// <summary>
-    /// Classe de dispatch des action dans le thread UI
+    /// class that dispatch in the UIThread
     /// </summary>
     public static class UiThreadDispatcher
     {
