@@ -29,10 +29,9 @@ namespace PRF.Utils.WPF
         protected NotifierBase()
         {
             // stocke les propriétés à la construction pour la vérification:
-            _propertyHash = GetType()
+            _propertyHash = new HashSet<string>(GetType()
                 .GetProperties(BindingFlags.Instance | BindingFlags.Public)
-                .Select(o => o.Name)
-                .ToHashSet();
+                .Select(o => o.Name));
         }
 
         /// <summary>

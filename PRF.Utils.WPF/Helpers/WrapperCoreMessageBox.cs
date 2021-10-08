@@ -16,7 +16,7 @@ namespace PRF.Utils.WPF.Helpers
         /// </summary>
         public static async Task DispatchAndWrapAsync(Action action, Action onFinally = null, [CallerMemberName] string methodName = "")
         {
-            await DispatcherCore.DispatchAndWrapAsyncBase(
+            await AsyncWrapper.DispatchAndWrapAsyncBase(
                 action,
                 e => OnError(e, methodName),
                 onFinally).ConfigureAwait(false);
@@ -27,7 +27,7 @@ namespace PRF.Utils.WPF.Helpers
         /// </summary>
         public static async Task DispatchAndWrapAsync<T>(Func<T> action, Action onFinally = null, [CallerMemberName] string methodName = "")
         {
-            await DispatcherCore.DispatchAndWrapAsyncBase(
+            await AsyncWrapper.DispatchAndWrapAsyncBase(
                 action,
                 e => OnError(e, methodName),
                 onFinally).ConfigureAwait(false);
@@ -38,7 +38,7 @@ namespace PRF.Utils.WPF.Helpers
         /// </summary>
         public static async Task DispatchAndWrapAsync(Func<Task> action, Action onFinally = null, [CallerMemberName] string methodName = "")
         {
-            await DispatcherCore.DispatchAndWrapAsyncBase(
+            await AsyncWrapper.DispatchAndWrapAsyncBase(
                 action,
                 e => OnError(e, methodName),
                 onFinally).ConfigureAwait(false);
@@ -50,7 +50,7 @@ namespace PRF.Utils.WPF.Helpers
         /// </summary>
         public static async Task DispatchAndWrapAsync<T>(Func<Task<T>> action, Action onFinally = null, [CallerMemberName] string methodName = "")
         {
-            await DispatcherCore.DispatchAndWrapAsyncBase(
+            await AsyncWrapper.DispatchAndWrapAsyncBase(
                 action,
                 e => OnError(e, methodName),
                 onFinally).ConfigureAwait(false);

@@ -47,7 +47,7 @@ namespace PRF.Utils.WPF.BootStrappers
         where TMainViewModel : NotifierBase
     {
         private readonly CancellationTokenSource _cts = new CancellationTokenSource();
-        private readonly InjectionContainer _container = new InjectionContainer();
+        private readonly InjectionContainerSimpleInjector _container = new InjectionContainerSimpleInjector();
         private readonly object _key = new object();
         private bool _hasbeenRun;
 

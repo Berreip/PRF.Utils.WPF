@@ -48,9 +48,9 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Castle.Core" Version="4.4.1" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="PRF.Utils.CoreComponents" Version="1.0.6" />
-    <PackageReference Include="PRF.Utils.Injection" Version="1.0.3" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="PRF.Utils.CoreComponents" Version="2.0.0" />
+    <PackageReference Include="PRF.Utils.Injection" Version="2.0.0" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Ressources\LICENSE.txt">

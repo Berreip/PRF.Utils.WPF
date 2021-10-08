@@ -229,7 +229,7 @@ namespace PRF.Utils.WPF.Commands
             else
             {
                 // execute with a fire and forget BUT a try catch finally
-                WrapperCore.WrapAsync(async () => await _executeAsync(parameter).ConfigureAwait(false), e => e.ManageErrorOnCommand(_onErrorOnAsync));
+                AsyncWrapper.DispatchAndWrapAsyncBase(async () => await _executeAsync(parameter).ConfigureAwait(false), e => e.ManageErrorOnCommand(_onErrorOnAsync));
             }
         }
     }
@@ -266,7 +266,7 @@ namespace PRF.Utils.WPF.Commands
         public async Task ExecuteAsync(T parameter)
         { 
             // execute with a fire and forget BUT a try catch finally
-            await WrapperCore.WrapAsync(
+            await AsyncWrapper.DispatchAndWrapAsyncBase(
                 async () => await _executeAsync(parameter).ConfigureAwait(false), 
                 e => e.ManageErrorOnCommand(_onErrorOnAsync))
                 .ConfigureAwait(false);
@@ -305,7 +305,7 @@ namespace PRF.Utils.WPF.Commands
         public async Task ExecuteAsync()
         {
             // execute with a fire and forget BUT a try catch finally
-            await WrapperCore.WrapAsync(
+            await AsyncWrapper.DispatchAndWrapAsyncBase(
                 async () => await _executeAsync().ConfigureAwait(false),
                 e => e.ManageErrorOnCommand(_onErrorOnAsync))
                 .ConfigureAwait(false);

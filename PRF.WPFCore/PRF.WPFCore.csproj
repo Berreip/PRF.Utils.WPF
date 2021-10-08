@@ -20,8 +20,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="PRF.Utils.CoreComponents" Version="1.0.6" />
-    <PackageReference Include="PRF.Utils.Injection" Version="1.0.3" />
+    <PackageReference Include="PRF.Utils.CoreComponents" Version="2.0.0" />
+    <PackageReference Include="PRF.Utils.Injection" Version="2.0.0" />
   </ItemGroup>
 
   <ItemGroup>
