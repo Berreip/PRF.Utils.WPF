@@ -227,7 +227,7 @@ namespace PRF.WPFCore.Commands
             else
             {
                 // execute with a fire and forget BUT a try catch finally
-                AsyncWrapper.WrapAsync(async () => await _executeAsync(parameter).ConfigureAwait(false), e => e.ManageErrorOnCommand(_onErrorOnAsync));
+                AsyncWrapperBase.WrapAsync(async () => await _executeAsync(parameter).ConfigureAwait(false), e => e.ManageErrorOnCommand(_onErrorOnAsync));
             }
         }
     }
@@ -264,7 +264,7 @@ namespace PRF.WPFCore.Commands
         public async Task ExecuteAsync(T parameter)
         { 
             // execute with a fire and forget BUT a try catch finally
-            await AsyncWrapper.WrapAsync(
+            await AsyncWrapperBase.WrapAsync(
                 async () => await _executeAsync(parameter).ConfigureAwait(false), 
                 e => e.ManageErrorOnCommand(_onErrorOnAsync))
                 .ConfigureAwait(false);
@@ -303,7 +303,7 @@ namespace PRF.WPFCore.Commands
         public async Task ExecuteAsync()
         {
             // execute with a fire and forget BUT a try catch finally
-            await AsyncWrapper.WrapAsync(
+            await AsyncWrapperBase.WrapAsync(
                 async () => await _executeAsync().ConfigureAwait(false),
                 e => e.ManageErrorOnCommand(_onErrorOnAsync))
                 .ConfigureAwait(false);
