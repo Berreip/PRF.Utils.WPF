@@ -7,11 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PRF.Utils.WPF", "PRF.Utils.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PRF.Utils.WPF.UnitTests", "PRF.Utils.WPF.UnitTests\PRF.Utils.WPF.UnitTests.csproj", "{9AB05832-A62C-45C0-B558-FCE7135A5749}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{64BF6270-9A26-45A2-8325-2C2816E32205}"
-	ProjectSection(SolutionItems) = preProject
-		.editorconfig = .editorconfig
-	EndProjectSection
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PRF.WPFCore", "PRF.WPFCore\PRF.WPFCore.csproj", "{E31FD0F9-8ACE-443F-A23F-0C9240529D5D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfModelApp.WPFCore", "WpfModelApp.WPFCore\WpfModelApp.WPFCore.csproj", "{B101F439-68A8-4D8E-B116-2885308C86C7}"
