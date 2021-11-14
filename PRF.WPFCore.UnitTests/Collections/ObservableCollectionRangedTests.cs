@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using NUnit.Framework;
@@ -72,7 +71,7 @@ namespace PRF.WPFCore.UnitTests.Collections
             _sut.AddRange(sourceObject);
 
             //Act
-            var newSource = new object[]
+            var newSource = new[]
             {
                 sourceObject[1], // An old reference
                 new object(), // and new ones

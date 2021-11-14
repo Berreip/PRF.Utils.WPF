@@ -4,8 +4,6 @@ using System.Windows;
 using NUnit.Framework;
 using PRF.Utils.Injection.Containers;
 using PRF.Utils.Injection.Utils;
-using PRF.Utils.WPF.BootStrappers;
-using PRF.WPFCore.BootStrappers;
 
 namespace PRF.WPFCore.UnitTests.BootStrappers
 {

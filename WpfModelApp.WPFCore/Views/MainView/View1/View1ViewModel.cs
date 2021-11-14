@@ -52,7 +52,7 @@ namespace WpfModelApp.WPFCore.Views.MainView.View1
             var limit = Limit;
             await WrapperCoreMessageBox.DispatchAndWrapAsync(() =>
             {
-                for (int i = 0; i < limit; i++)
+                for (var i = 0; i < limit; i++)
                 {
                     _backingCollection.Add(Guid.NewGuid());
                 }

@@ -3,7 +3,7 @@ using NUnit.Framework;
 
 namespace PRF.WPFCore.UnitTests.NotifyTest
 {
-    public class TestViewModelBaseClass : ViewModelBase
+    public class TestViewModelUncheckedBaseClass : ViewModelBaseUnchecked
     {
         private int _property;
 
@@ -23,10 +23,7 @@ namespace PRF.WPFCore.UnitTests.NotifyTest
         public bool Property2
         {
             get => _property2;
-            set
-            {
-                SetProperty(ref _property2, value);
-            }
+            set => SetProperty(ref _property2, value);
         }
         
         
@@ -38,20 +35,21 @@ namespace PRF.WPFCore.UnitTests.NotifyTest
             set => SetProperty(ref _propertyNullable, value);
         }
 
+        public void RaiseExternal(string strToraise)
+        {
+            RaisePropertyChanged(strToraise);
+        }
     }
 
     [TestFixture]
-    public class NotifyTest
+    internal sealed class ViewModelUncheckedBaseTests
     {
-        private TestViewModelBaseClass _sut;
+        private TestViewModelUncheckedBaseClass _sut;
 
         [SetUp]
         public void TestInitialize()
         {
-            // mock:
-
-            // instance de test:
-            _sut = new TestViewModelBaseClass();
+            _sut = new TestViewModelUncheckedBaseClass();
         }
 
         [Test]
@@ -59,10 +57,10 @@ namespace PRF.WPFCore.UnitTests.NotifyTest
         {
             //Configuration
             var count = 0;
-            _sut.PropertyChanged += (s, p) => Interlocked.Increment(ref count);
+            _sut.PropertyChanged += (_, _) => Interlocked.Increment(ref count);
 
             //Test
-            for (int i = 0; i < 5; i++)
+            for (var i = 0; i < 5; i++)
             {
                 _sut.Property = i;
             }
@@ -77,7 +75,7 @@ namespace PRF.WPFCore.UnitTests.NotifyTest
         {
             //Configuration
             var count = 0;
-            _sut.PropertyChanged += (s, p) => Interlocked.Increment(ref count);
+            _sut.PropertyChanged += (_, _) => Interlocked.Increment(ref count);
 
             //Test
             _sut.Property2 = true;
@@ -92,7 +90,7 @@ namespace PRF.WPFCore.UnitTests.NotifyTest
         {
             //Configuration
             var count = 0;
-            _sut.PropertyChanged += (s, p) => Interlocked.Increment(ref count);
+            _sut.PropertyChanged += (_, _) => Interlocked.Increment(ref count);
 
             //Test
             _sut.Property2 = true;
@@ -108,7 +106,7 @@ namespace PRF.WPFCore.UnitTests.NotifyTest
         {
             //Configuration
             var count = 0;
-            _sut.PropertyChanged += (s, p) => Interlocked.Increment(ref count);
+            _sut.PropertyChanged += (_, _) => Interlocked.Increment(ref count);
 
             //Test
             _sut.PropertyNullable = "niak";
@@ -123,7 +121,7 @@ namespace PRF.WPFCore.UnitTests.NotifyTest
         {
             //Configuration
             var count = 0;
-            _sut.PropertyChanged += (s, p) => Interlocked.Increment(ref count);
+            _sut.PropertyChanged += (_, _) => Interlocked.Increment(ref count);
 
             //Test
             _sut.PropertyNullable = null;
@@ -138,15 +136,27 @@ namespace PRF.WPFCore.UnitTests.NotifyTest
         {
             //Configuration
             var count = 0;
-            _sut.PropertyChanged += (s, p) => Interlocked.Increment(ref count);
+            _sut.PropertyChanged += (_, _) => Interlocked.Increment(ref count);
 
             //Test
-            _sut.PropertyNullable = "niak";
+            _sut.PropertyNullable = @"niak";
             _sut.PropertyNullable = null;
 
             //Verify
             Assert.AreEqual(2, count);
             Assert.AreEqual(null, _sut.PropertyNullable);
+        }
+        
+        [Test]
+        public void RaisePropertyChanged_do_not_throw_when_property_name_is_not_a_valid_property_of_the_object()
+        {
+            //Configuration
+
+            //Test
+            _sut.RaiseExternal("stub_prop");
+
+            //Verify
+            Assert.Pass();
         }
 
     }

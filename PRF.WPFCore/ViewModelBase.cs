@@ -8,22 +8,18 @@ using System.Runtime.CompilerServices;
 namespace PRF.WPFCore
 {
     /// <summary>
-    /// Base class for all viewModel. In order to avoid memory leak, it is advised to 
-    /// Afin d'eviter les fuites mémoires, il est conseillé de dériver de cette classe dans tous les ViewModel et tous les adapteurs
-    /// (ou d'implémenter INotifyPropertyChanged)
+    /// Base class for all viewModel. In order to avoid memory leak in notifiable collection, it is advised to implement this class
+    /// This class check that all raised properties exist on the current object
     /// </summary>
     public abstract class ViewModelBase : INotifyPropertyChanged
     {
         private readonly HashSet<string> _propertyHash;
 
         /// <inheritdoc />
-        /// <summary>
-        /// L'évènement de changement des propriétés notifiantes
-        /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
-        /// Constructeur
+        /// Constructor
         /// </summary>
         protected ViewModelBase()
         {
@@ -43,6 +39,7 @@ namespace PRF.WPFCore
             {
                 throw new InvalidOperationException($"Trying to raise notification on property \"{propertyName}\" which does not exists on type \"{GetType().Name}\"");
             }
+
             InvokeProperty(new PropertyChangedEventArgs(propertyName));
         }
 
@@ -55,10 +52,12 @@ namespace PRF.WPFCore
             {
                 return false;
             }
+
             if (oldValue != null && oldValue.Equals(newValue))
             {
                 return false;
             }
+
             oldValue = newValue;
             RaisePropertyChanged(propertyName);
             return true;
@@ -66,25 +65,7 @@ namespace PRF.WPFCore
 
         private void InvokeProperty(PropertyChangedEventArgs e)
         {
-            var handler = PropertyChanged;
-            try
-            {
-                handler?.Invoke(this, e);
-            }
-            catch
-            {
-                //uniquement pour prévenir les rares cas de plantage (bug du framework) en cas de notification d'une propriété mise à jour de puis un thread de background 
-                //et surveillée par le liveshapping d'une collectionview 
-                try
-                {
-                    //du coup on re-essaye:
-                    handler?.Invoke(this, e);
-                }
-                catch
-                {
-                    //et on avale si ca replante une 2e fois
-                }
-            }
+            PropertyChanged?.Invoke(this, e);
         }
     }
 }

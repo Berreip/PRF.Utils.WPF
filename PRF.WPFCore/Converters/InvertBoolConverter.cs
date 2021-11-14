@@ -20,11 +20,12 @@ namespace PRF.WPFCore.Converters
         /// </summary>
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (targetType != typeof(bool))
-                throw new InvalidCastException("value is not a boolean");
+            if (value is bool val)
+            {
+                return !val;
+            }
 
-            // ReSharper disable once PossibleNullReferenceException
-            return !(bool)value;
+            throw new InvalidCastException("value is not a boolean");
         }
 
         /// <summary>
@@ -32,11 +33,12 @@ namespace PRF.WPFCore.Converters
         /// </summary>
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (targetType != typeof(bool))
-                throw new InvalidCastException("value is not a boolean");
-
-            // ReSharper disable once PossibleNullReferenceException
-            return !(bool)value;
+            if (value is bool val)
+            {
+                return !val;
+            }
+            
+            throw new InvalidCastException("value is not a boolean");
         }
     }
 }
