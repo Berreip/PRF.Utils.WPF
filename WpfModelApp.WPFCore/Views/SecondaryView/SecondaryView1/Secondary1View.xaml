@@ -9,6 +9,10 @@
              d:DesignHeight="450" d:DesignWidth="800"
              d:DataContext="{d:DesignInstance secondaryView1:Secondary1ViewModel, IsDesignTimeCreatable=true}">
     <Grid Background="Green">
+        <StackPanel HorizontalAlignment="Center" Orientation="Vertical">
+            <Button Command="{Binding DebugAssertCommand}">Debug.Assert</Button>
+            <Button Command="{Binding DebugFailCommand}">Debug.Fail</Button>
+        </StackPanel>
             
     </Grid>
 </UserControl>
