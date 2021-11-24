@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Threading;
+using PRF.WPFCore.Diagnostic;
 
 namespace WpfModelApp.WPFCore
 {
@@ -16,6 +18,7 @@ namespace WpfModelApp.WPFCore
             {
                 var container = new ModelAppBoot();
                 var app = new App();
+                DebugCore.SetAssertionFailedCallback(OnAssertionFailedDuringInit);
                 //close the app when the main window is closed (default value is lastWindow)
                 app.ShutdownMode = ShutdownMode.OnMainWindowClose;
                 app.DispatcherUnhandledException += OnUnhandledException;
@@ -29,6 +32,13 @@ namespace WpfModelApp.WPFCore
             {
                 MessageBox.Show($"Unhandled Exception (will exit after close): {ex} ");
             }
+        }
+
+        private static void OnAssertionFailedDuringInit(AssertionFailedResult assertionfailedResult)
+        {
+            MessageBox.Show(@$"{assertionfailedResult.Message}
+CALLER = {assertionfailedResult.MethodSource}
+STACK = {assertionfailedResult.StackTrace}", "ASSERTION FAILED DURING INIT", MessageBoxButton.OK, MessageBoxImage.Exclamation);
         }
 
         private static void AppDomainOnUnhandledException(object sender, UnhandledExceptionEventArgs e)
