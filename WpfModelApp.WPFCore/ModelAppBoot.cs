@@ -7,6 +7,7 @@ using PRF.WPFCore.PopupManager;
 using WpfModelApp.WPFCore.Config;
 using WpfModelApp.WPFCore.Navigation;
 using WpfModelApp.WPFCore.Views;
+using WpfModelApp.WPFCore.Views.Assertion;
 using WpfModelApp.WPFCore.Views.MainView.View1;
 using WpfModelApp.WPFCore.Views.MainView.View2;
 using WpfModelApp.WPFCore.Views.Popups.Popup1;
@@ -25,6 +26,7 @@ namespace WpfModelApp.WPFCore
             //Gestionnaires:
             container.Register<IMainPanelNavigation, MainPanelNavigation>(LifeTime.Singleton);
             container.Register<ISecondaryPanelNavigation, SecondaryPanelNavigation>(LifeTime.Singleton);
+            
             
             //Views
             container.RegisterType<View1View>(LifeTime.Singleton);

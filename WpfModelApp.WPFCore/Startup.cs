@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Threading;
 using PRF.WPFCore.Diagnostic;
+using WpfModelApp.WPFCore.Views.Assertion;
 
 namespace WpfModelApp.WPFCore
 {
@@ -34,11 +35,13 @@ namespace WpfModelApp.WPFCore
             }
         }
 
-        private static void OnAssertionFailedDuringInit(AssertionFailedResult assertionfailedResult)
+        private static AssertionResponse OnAssertionFailedDuringInit(AssertionFailedResult assertionfailedResult)
         {
-            MessageBox.Show(@$"{assertionfailedResult.Message}
-CALLER = {assertionfailedResult.MethodSource}
-STACK = {assertionfailedResult.StackTrace}", "ASSERTION FAILED DURING INIT", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            var assertionVm = new AssertionFailedViewModel(assertionfailedResult);
+            var view = new AssertionFailedView(assertionVm);
+            assertionVm.OnResponseSet += () => view.Close();
+            view.ShowDialog();
+            return assertionVm.GetResponse();
         }
 
         private static void AppDomainOnUnhandledException(object sender, UnhandledExceptionEventArgs e)

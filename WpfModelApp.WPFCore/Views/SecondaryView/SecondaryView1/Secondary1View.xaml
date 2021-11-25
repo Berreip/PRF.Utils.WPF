@@ -12,6 +12,7 @@
         <StackPanel HorizontalAlignment="Center" Orientation="Vertical" Margin="10">
             <Button Margin="5" Command="{Binding DebugAssertCommand}">Debug.Assert</Button>
             <Button Margin="5" Command="{Binding DebugFailCommand}">Debug.Fail</Button>
+            <Button Margin="5" Command="{Binding DebugFailBigTextCommand}">Debug.Fail Big text</Button>
         </StackPanel>
             
     </Grid>
