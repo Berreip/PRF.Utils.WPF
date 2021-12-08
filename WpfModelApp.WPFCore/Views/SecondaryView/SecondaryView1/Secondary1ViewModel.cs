@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
+using PRF.Utils.CoreComponents.Diagnostic;
 using PRF.WPFCore;
 using PRF.WPFCore.Commands;
-using PRF.WPFCore.Diagnostic;
 
 namespace WpfModelApp.WPFCore.Views.SecondaryView.SecondaryView1
 {

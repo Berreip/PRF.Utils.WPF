@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Windows;
 using System.Windows.Threading;
-using PRF.WPFCore.Diagnostic;
+using PRF.Utils.CoreComponents.Diagnostic;
 using WpfModelApp.WPFCore.Views.Assertion;
 
 namespace WpfModelApp.WPFCore

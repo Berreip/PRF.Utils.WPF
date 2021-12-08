@@ -13,15 +13,15 @@
     <PackageIcon>PRF_Core_Component_Icon.png</PackageIcon>
     <PackageTags>WPF, ObservableCollectionRanged, LiveCollection</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>2.1.0</Version>
-    <AssemblyVersion>2.1.0.0</AssemblyVersion>
-    <FileVersion>2.1.0.0</FileVersion>
-    <PackageVersion>2.1.0</PackageVersion>
-    <PackageReleaseNotes>Add a DebugCore.Assert / Fail to mimick .net frk concept with a callback</PackageReleaseNotes>
+    <Version>2.1.1</Version>
+    <AssemblyVersion>2.1.1.0</AssemblyVersion>
+    <FileVersion>2.1.1.0</FileVersion>
+    <PackageVersion>2.1.1</PackageVersion>
+    <PackageReleaseNotes>Move DebugCore.Assert / Fail to PRF.Core</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="PRF.Utils.CoreComponents" Version="2.0.1" />
+    <PackageReference Include="PRF.Utils.CoreComponents" Version="2.1.0" />
     <PackageReference Include="PRF.Utils.Injection" Version="2.0.0" />
   </ItemGroup>
 

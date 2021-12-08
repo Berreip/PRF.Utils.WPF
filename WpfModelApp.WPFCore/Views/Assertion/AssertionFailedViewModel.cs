@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Windows;
+using PRF.Utils.CoreComponents.Diagnostic;
 using PRF.WPFCore;
 using PRF.WPFCore.Commands;
-using PRF.WPFCore.Diagnostic;
 
 namespace WpfModelApp.WPFCore.Views.Assertion
 {
