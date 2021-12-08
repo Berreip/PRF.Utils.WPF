@@ -4,6 +4,9 @@ using System.Runtime.CompilerServices;
 
 namespace PRF.WPFCore.Diagnostic
 {
+    /// <summary>
+    /// Class that has a similar function thant debug.assert in a .net frk but with a registration for a debug windows
+    /// </summary>
     public static class DebugCore
     {
         private static Func<AssertionFailedResult, AssertionResponse> _assertionFailedCallBack;
