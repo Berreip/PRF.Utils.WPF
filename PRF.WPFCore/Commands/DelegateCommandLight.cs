@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using PRF.Utils.CoreComponents.Async;
@@ -14,7 +15,7 @@ namespace PRF.WPFCore.Commands
         /// <summary>
         /// Request an evaluation of the CanExecute of the given command
         /// </summary>
-        Task RaiseCanExecuteChanged();
+        void RaiseCanExecuteChanged();
     }
 
     /// <summary>
@@ -85,9 +86,16 @@ namespace PRF.WPFCore.Commands
     public abstract class DelegateCommandLightBase : IDelegateCommandLightBase
     {
         /// <inheritdoc />
-        public async Task RaiseCanExecuteChanged()
+        public async void RaiseCanExecuteChanged()
         {
-            await UiThreadDispatcher.ExecuteOnUIAsync(() => CanExecuteChanged?.Invoke(this, EventArgs.Empty)).ConfigureAwait(false);
+            try
+            {
+                await UiThreadDispatcher.ExecuteOnUIAsync(() => CanExecuteChanged?.Invoke(this, EventArgs.Empty)).ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                Trace.TraceError(e.ToString());
+            }
         }
 
         /// <inheritdoc />
