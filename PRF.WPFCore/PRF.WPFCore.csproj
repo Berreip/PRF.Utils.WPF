@@ -13,11 +13,11 @@
     <PackageIcon>PRF_Core_Component_Icon.png</PackageIcon>
     <PackageTags>WPF, ObservableCollectionRanged, LiveCollection</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>2.1.1</Version>
-    <AssemblyVersion>2.1.1.0</AssemblyVersion>
-    <FileVersion>2.1.1.0</FileVersion>
-    <PackageVersion>2.1.1</PackageVersion>
-    <PackageReleaseNotes>Move DebugCore.Assert / Fail to PRF.Core</PackageReleaseNotes>
+    <Version>3.0.0</Version>
+    <AssemblyVersion>3.0.0.0</AssemblyVersion>
+    <FileVersion>3.0.0.0</FileVersion>
+    <PackageVersion>3.0.0</PackageVersion>
+    <PackageReleaseNotes>Change RaiseCanExecute to void</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
