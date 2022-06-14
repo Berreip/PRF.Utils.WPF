@@ -63,29 +63,23 @@ namespace PRF.WPFCore.UnitTests.Commands
         }
 
         [Test]
-        public void DelegateCommand_Parameter_Execute_With_Async_AndException()
+        public void DelegateCommand_Parameter_Execute_With_Async_Send_exception_in_ctor()
         {
             //Arrange
-            var exceptionCatch = 0;
-            var mrev = new ManualResetEventSlim();
-            var sut = new DelegateCommandLight(async () =>
-            {
-                await Task.Delay(5);
-                throw new Exception();
-            }, null, 
-            e =>
-            {
-                Interlocked.Increment(ref exceptionCatch);
-                mrev.Set();
-            });
 
             //Act
-            sut.Execute();
-
+#pragma warning disable CS0618
+            Assert.Throws<ArgumentException>(() =>
+            {
+                var _ = new DelegateCommandLight(async () =>
+                {
+                    await Task.Delay(5);
+                    throw new Exception();
+                });
+            });
+#pragma warning restore CS0618
+            
             //Assert
-            var res = mrev.Wait(TimeSpan.FromSeconds(2));
-            Assert.IsTrue(res);
-            Assert.AreEqual(1, exceptionCatch);
         }
 
         [Test]
@@ -97,7 +91,7 @@ namespace PRF.WPFCore.UnitTests.Commands
             {
                 await Task.Delay(5);
                 Interlocked.Increment(ref count);
-            }, null);
+            });
 
             //Act
             await sut.ExecuteAsync().ConfigureAwait(false);
@@ -116,7 +110,7 @@ namespace PRF.WPFCore.UnitTests.Commands
                 await Task.Delay(5);
                 Assert.AreEqual("foo", s);
                 Interlocked.Increment(ref count);
-            }, null);
+            });
 
             //Act
             await sut.ExecuteAsync("foo").ConfigureAwait(false);

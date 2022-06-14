@@ -5,6 +5,8 @@ using System.Windows.Input;
 using PRF.Utils.CoreComponents.Async;
 using PRF.WPFCore.UiWorkerThread;
 
+// ReSharper disable UnusedMember.Global
+
 namespace PRF.WPFCore.Commands
 {
     /// <summary>
@@ -16,6 +18,20 @@ namespace PRF.WPFCore.Commands
         /// Request an evaluation of the CanExecute of the given command
         /// </summary>
         void RaiseCanExecuteChanged();
+
+        /// <summary>
+        /// Request an evaluation of the CanExecute of the given command in a async way
+        /// </summary>
+        Task RaiseCanExecuteChangedAsync();
+
+        /// <summary>
+        /// Request an evaluation of the CanExecute of the given command in fire and forget (avoid any deadlock from any given thread)
+        /// <remarks>Please note that this method is NOT awaitable: It does swallow all exceptions to
+        /// avoid crashing application as it is often the case if you don't await it.
+        /// If your canExecute could send business exception, you have to manage them in your callback if you wants informations.
+        /// If you wants more control; use the RaiseCanExecuteChanged async.</remarks>
+        /// </summary>
+        void RaiseCanExecuteChangedInFireAndForget();
     }
 
     /// <summary>
@@ -59,7 +75,7 @@ namespace PRF.WPFCore.Commands
         /// CanExecute with the correct expected type
         /// </summary>
         bool CanExecute(T parameter);
-        
+
         /// <summary>
         /// Execute with the correct expected type
         /// </summary>
@@ -86,15 +102,46 @@ namespace PRF.WPFCore.Commands
     public abstract class DelegateCommandLightBase : IDelegateCommandLightBase
     {
         /// <inheritdoc />
-        public async void RaiseCanExecuteChanged()
+        public void RaiseCanExecuteChanged()
         {
-            try
+            var handler = CanExecuteChanged;
+            if (handler != null)
             {
-                await UiThreadDispatcher.ExecuteOnUIAsync(() => CanExecuteChanged?.Invoke(this, EventArgs.Empty)).ConfigureAwait(false);
+                try
+                {
+                    UiThreadDispatcher.ExecuteOnUI(() => handler.Invoke(this, EventArgs.Empty));
+                }
+                catch (Exception e)
+                {
+                    Trace.TraceError(e.ToString());
+                }
             }
-            catch (Exception e)
+        }
+
+        /// <inheritdoc />
+        public async Task RaiseCanExecuteChangedAsync()
+        {
+            var handler = CanExecuteChanged;
+            if (handler != null)
             {
-                Trace.TraceError(e.ToString());
+                await UiThreadDispatcher.ExecuteOnUIAsync(() => handler.Invoke(this, EventArgs.Empty)).ConfigureAwait(false);
+            }
+        }
+
+        /// <inheritdoc />
+        public async void RaiseCanExecuteChangedInFireAndForget()
+        {
+            var handler = CanExecuteChanged;
+            if (handler != null)
+            {
+                try
+                {
+                    await UiThreadDispatcher.ExecuteOnUIAsync(() => handler.Invoke(this, EventArgs.Empty)).ConfigureAwait(false);
+                }
+                catch (Exception e)
+                {
+                    Trace.TraceError(e.ToString());
+                }
             }
         }
 
@@ -164,8 +211,6 @@ namespace PRF.WPFCore.Commands
     public sealed class DelegateCommandLight : DelegateCommandLightWithoutParameterBase
     {
         private readonly Action _execute;
-        private readonly Func<Task> _executeAsync;
-        private readonly Action<Exception> _onErrorOnAsync;
 
         /// <inheritdoc />
         public DelegateCommandLight(Action execute, Func<bool> canExecute = null) : base(canExecute)
@@ -174,38 +219,29 @@ namespace PRF.WPFCore.Commands
         }
 
         /// <summary>
-        /// constructor of an async command. Watch out, it is kind of a trick as it avoid that replacing a
-        /// ctor DelegateCommandLight(() => ...) by an async one : DelegateCommandLight(async() => ....) leads to a major bug
-        /// (cast of the second one to Action and no way to grab again the await part)
-        /// Please prefer using the DelegateCommandAsync
+        /// Watch out, you are trying to use an async delegate in a sync constructor. It leads to a major bug as the
+        /// delegate will be downcasted to a sync Action and there will be no way to grab again the await part: everything
+        /// after the first real awaitable call will be on its own. Please use the DelegateCommandAsync if you want an
+        /// async delegate
         /// </summary>
-        public DelegateCommandLight(Func<Task> executeAsync, Func<bool> canExecute = null, Action<Exception> onErrorOnAsync = null) : base(canExecute)
+        [Obsolete(@"WARNING: you are trying to use an async delegate in a sync constructor. It leads to a MAJOR BUG as the
+delegate will be downcasted to a sync Action and there will be no way to grab again the await part: everything after the first real awaitable call will be on its own. Please use the DelegateCommandAsync if you want an async delegate")]
+        // ReSharper disable once UnusedParameter.Local
+        public DelegateCommandLight(Func<Task> executeAsync, Func<bool> canExecute = null) : base(canExecute)
         {
-            _executeAsync = executeAsync;
-            _onErrorOnAsync = onErrorOnAsync;
+            throw new ArgumentException(
+                @"WARNING: you are trying to use an async delegate in a sync constructor. It leads to a MAJOR BUG as the
+delegate will be downcasted to a sync Action and there will be no way to grab again the await part: everything after the first real awaitable call will be on its own. Please use the DelegateCommandAsync if you want an async delegate");
         }
 
         /// <inheritdoc />
-        public override void Execute()
-        {
-            if (_execute != null)
-            {
-                _execute();
-            }
-            else
-            {
-                // execute with a fire and forget BUT a try catch finally
-                _executeAsync.WrapAsync(e => e.ManageErrorOnCommand(_onErrorOnAsync)).ConfigureAwait(false);
-            }
-        }
+        public override void Execute() => _execute();
     }
 
     /// <inheritdoc />
     public sealed class DelegateCommandLight<T> : DelegateCommandLightWithParameterBase<T>
     {
         private readonly Action<T> _execute;
-        private readonly Func<T, Task> _executeAsync;
-        private readonly Action<Exception> _onErrorOnAsync;
 
         /// <inheritdoc />
         public DelegateCommandLight(Action<T> execute, Func<T, bool> canExecute = null) : base(canExecute)
@@ -214,30 +250,23 @@ namespace PRF.WPFCore.Commands
         }
 
         /// <summary>
-        /// constructor of an async command. Watch out, it is kind of a trick as it avoid that replacing a
-        /// ctor DelegateCommandLight(() => ...) by an async one : DelegateCommandLight(async() => ....) leads to a major bug
-        /// (cast of the second one to Action and no way to grab again the await part)
-        /// Please prefer using the DelegateCommandAsync
+        /// Watch out, you are trying to use an async delegate in a sync constructor. It leads to a major bug as the
+        /// delegate will be downcasted to a sync Action and there will be no way to grab again the await part: everything
+        /// after the first real awaitable call will be on its own. Please use the DelegateCommandAsync if you want an
+        /// async delegate
         /// </summary>
-        public DelegateCommandLight(Func<T, Task> executeAsync, Func<T, bool> canExecute = null, Action<Exception> onErrorOnAsync = null) : base(canExecute)
+        [Obsolete(@"WARNING: you are trying to use an async delegate in a sync constructor. It leads to a MAJOR BUG as the
+delegate will be downcasted to a sync Action and there will be no way to grab again the await part: everything after the first real awaitable call will be on its own. Please use the DelegateCommandAsync if you want an async delegate")]
+        // ReSharper disable once UnusedParameter.Local
+        public DelegateCommandLight(Func<T, Task> executeAsync, Func<T, bool> canExecute = null) : base(canExecute)
         {
-            _executeAsync = executeAsync;
-            _onErrorOnAsync = onErrorOnAsync;
+            throw new ArgumentException(
+                @"WARNING: you are trying to use an async delegate in a sync constructor. It leads to a MAJOR BUG as the
+delegate will be downcasted to a sync Action and there will be no way to grab again the await part: everything after the first real awaitable call will be on its own. Please use the DelegateCommandAsync if you want an async delegate");
         }
 
         /// <inheritdoc />
-        public override void Execute(T parameter)
-        {
-            if (_execute != null)
-            {
-                _execute(parameter);
-            }
-            else
-            {
-                // execute with a fire and forget BUT a try catch finally
-                AsyncWrapperBase.WrapAsync(async () => await _executeAsync(parameter).ConfigureAwait(false), e => e.ManageErrorOnCommand(_onErrorOnAsync));
-            }
-        }
+        public override void Execute(T parameter) => _execute(parameter);
     }
 
     /// <summary>
@@ -267,14 +296,14 @@ namespace PRF.WPFCore.Commands
             //Request an Execute async in a fire and forget mode
             ExecuteAsync(parameter).ConfigureAwait(false);
         }
-        
+
         /// <inheritdoc />
         public async Task ExecuteAsync(T parameter)
-        { 
+        {
             // execute with a fire and forget BUT a try catch finally
             await AsyncWrapperBase.WrapAsync(
-                async () => await _executeAsync(parameter).ConfigureAwait(false), 
-                e => e.ManageErrorOnCommand(_onErrorOnAsync))
+                    async () => await _executeAsync(parameter).ConfigureAwait(false),
+                    e => e.ManageErrorOnCommand(_onErrorOnAsync))
                 .ConfigureAwait(false);
         }
     }
@@ -312,10 +341,9 @@ namespace PRF.WPFCore.Commands
         {
             // execute with a fire and forget BUT a try catch finally
             await AsyncWrapperBase.WrapAsync(
-                async () => await _executeAsync().ConfigureAwait(false),
-                e => e.ManageErrorOnCommand(_onErrorOnAsync))
+                    async () => await _executeAsync().ConfigureAwait(false),
+                    e => e.ManageErrorOnCommand(_onErrorOnAsync))
                 .ConfigureAwait(false);
         }
     }
-
 }

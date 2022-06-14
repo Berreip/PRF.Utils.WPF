@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using PRF.WPFCore.UiWorkerThread;
@@ -6,8 +7,9 @@ using PRF.WPFCore.UiWorkerThread;
 namespace PRF.WPFCore.UnitTests.UiWorkerThread
 {
     [TestFixture]
+    [Apartment(ApartmentState.STA)]
     internal sealed class UiThreadDispatcherTests
-    { 
+    {
         [Test]
         public async Task ExecuteOnUI_With_Task()
         {
@@ -20,6 +22,7 @@ namespace PRF.WPFCore.UnitTests.UiWorkerThread
                 await Task.Delay(50);
                 counter = 1;
             });
+
 
             //Verify
             Assert.AreEqual(1, counter);
@@ -150,7 +153,24 @@ namespace PRF.WPFCore.UnitTests.UiWorkerThread
 
             //Verify
             Assert.AreEqual(1, counter);
+        }
 
+        [Test]
+        public void ExecuteOnUI_forward_exception()
+        {
+            //Configuration
+
+            //Test
+            Assert.ThrowsAsync<ArithmeticException>(async () =>
+            {
+                await UiThreadDispatcher.ExecuteOnUI(async () =>
+                {
+                    await Task.Delay(50).ConfigureAwait(false);
+                    throw new ArithmeticException("misc");
+                }).ConfigureAwait(false);
+            });
+
+            //Verify
         }
     }
 }
