@@ -13,10 +13,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="MaterialDesignColors" Version="2.0.6" />
-    <PackageReference Include="MaterialDesignThemes" Version="4.5.0" />
-    <PackageReference Include="PRF.Utils.CoreComponents" Version="2.2.1" />
-    <PackageReference Include="PRF.Utils.Injection" Version="2.0.0" />
+    <PackageReference Include="MaterialDesignColors" Version="2.0.9" />
+    <PackageReference Include="MaterialDesignThemes" Version="4.6.1" />
+    <PackageReference Include="PRF.Utils.CoreComponents" Version="2.2.2" />
+    <PackageReference Include="PRF.Utils.Injection" Version="2.0.2" />
   </ItemGroup>
 
   <ItemGroup>

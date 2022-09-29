@@ -13,17 +13,16 @@
     <PackageIcon>PRF_Core_Component_Icon.png</PackageIcon>
     <PackageTags>WPF, ObservableCollectionRanged, LiveCollection</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>4.0.0</Version>
-    <AssemblyVersion>4.0.0.0</AssemblyVersion>
-    <FileVersion>4.0.0.0</FileVersion>
-    <PackageVersion>4.0.0</PackageVersion>
-    <PackageReleaseNotes>Breaking change in Delegate command light with async parameter used instead of proper usage of DelegateCommandLightAsync: 
-      now, ctor throws exception when dowcasting to action is done for an async method instead of trying to cope with it.</PackageReleaseNotes>
+    <Version>4.0.1</Version>
+    <AssemblyVersion>4.0.1.0</AssemblyVersion>
+    <FileVersion>4.0.1.0</FileVersion>
+    <PackageVersion>4.1.0</PackageVersion>
+    <PackageReleaseNotes>Update packages.</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="PRF.Utils.CoreComponents" Version="2.2.1" />
-    <PackageReference Include="PRF.Utils.Injection" Version="2.0.0" />
+    <PackageReference Include="PRF.Utils.CoreComponents" Version="2.2.2" />
+    <PackageReference Include="PRF.Utils.Injection" Version="2.0.2" />
   </ItemGroup>
 
   <ItemGroup>
