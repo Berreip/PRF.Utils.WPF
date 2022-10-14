@@ -14,6 +14,7 @@ namespace PRF.WPFCore
     public abstract class ViewModelBase : INotifyPropertyChanged
     {
         private readonly HashSet<string> _propertyHash;
+        private double _epsilon = 0.001d;
 
         /// <inheritdoc />
         public event PropertyChangedEventHandler PropertyChanged;
@@ -48,12 +49,21 @@ namespace PRF.WPFCore
         /// </summary>
         protected bool SetProperty<T>(ref T oldValue, T newValue, [CallerMemberName] string propertyName = null)
         {
-            if (oldValue == null && newValue == null)
+            if (oldValue is double oldValueDouble &&
+                newValue is double newValueDouble && 
+                Math.Abs(oldValueDouble - newValueDouble) < _epsilon)
             {
                 return false;
             }
 
-            if (oldValue != null && oldValue.Equals(newValue))
+            if (oldValue is float oldValuefloat &&
+                newValue is float newValuefloat && 
+                Math.Abs(oldValuefloat - newValuefloat) < _epsilon)
+            {
+                return false;
+            }
+
+            if (Equals(oldValue, newValue))
             {
                 return false;
             }
@@ -66,6 +76,14 @@ namespace PRF.WPFCore
         private void InvokeProperty(PropertyChangedEventArgs e)
         {
             PropertyChanged?.Invoke(this, e);
+        }
+
+        /// <summary>
+        /// Allow to change the epsilon comparison for double and float (default is 0.001)
+        /// </summary>
+        protected void UpdateEpsilon(double newEpsilon)
+        {
+            _epsilon = newEpsilon;
         }
     }
 }
