@@ -13,10 +13,10 @@
     <PackageIcon>PRF_Core_Component_Icon.png</PackageIcon>
     <PackageTags>WPF, ObservableCollectionRanged, LiveCollection</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>4.2.0</Version>
-    <AssemblyVersion>4.2.0.0</AssemblyVersion>
-    <FileVersion>4.2.0.0</FileVersion>
-    <PackageVersion>4.2.0</PackageVersion>
+    <Version>4.2.1</Version>
+    <AssemblyVersion>4.2.1.0</AssemblyVersion>
+    <FileVersion>4.2.1.0</FileVersion>
+    <PackageVersion>4.2.1</PackageVersion>
     <PackageReleaseNotes>Epsilon comparison for SetProperty in ViewModelBase</PackageReleaseNotes>
   </PropertyGroup>
 
