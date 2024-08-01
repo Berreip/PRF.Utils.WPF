@@ -10,7 +10,7 @@ namespace PRF.WPFCore.UnitTests.BootStrappers
 {
     public sealed class BootStrapperPresentationTests
     {
-        [Fact]
+        [WpfFact]
         public void RegisterTests()
         {
             //Configuration
@@ -23,7 +23,7 @@ namespace PRF.WPFCore.UnitTests.BootStrappers
             Assert.NotNull(res);
         }
 
-        [Fact]
+        [WpfFact]
         public void VerifyNominal()
         {
             //Configuration
@@ -36,7 +36,7 @@ namespace PRF.WPFCore.UnitTests.BootStrappers
             Assert.Null(res);
         }
 
-        [Fact]
+        [WpfFact]
         public void Verify_Issues()
         {
             //Configuration

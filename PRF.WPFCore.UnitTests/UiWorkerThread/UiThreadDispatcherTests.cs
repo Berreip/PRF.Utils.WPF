@@ -8,7 +8,7 @@ namespace PRF.WPFCore.UnitTests.UiWorkerThread
 {
     public sealed class UiThreadDispatcherTests
     {
-        [Fact]
+        [WpfFact]
         public async Task ExecuteOnUI_With_Task()
         {
             //Configuration
@@ -26,7 +26,7 @@ namespace PRF.WPFCore.UnitTests.UiWorkerThread
             Assert.Equal(1, counter);
         }
 
-        [Fact]
+        [WpfFact]
         public void ExecuteOnUI_Basic()
         {
             //Configuration
@@ -43,7 +43,7 @@ namespace PRF.WPFCore.UnitTests.UiWorkerThread
             Assert.Equal(1, counter);
         }
 
-        [Fact]
+        [WpfFact]
         public async Task ExecuteOnUI_Task_Return()
         {
             //Configuration
@@ -62,7 +62,7 @@ namespace PRF.WPFCore.UnitTests.UiWorkerThread
             Assert.Equal(1, counter);
         }
 
-        [Fact]
+        [WpfFact]
         public void ExecuteOnUI_Return()
         {
             //Configuration
@@ -80,7 +80,7 @@ namespace PRF.WPFCore.UnitTests.UiWorkerThread
             Assert.Equal(1, counter);
         }
 
-        [Fact]
+        [WpfFact]
         public async Task ExecuteOnUIAsync()
         {
             //Configuration
@@ -97,7 +97,7 @@ namespace PRF.WPFCore.UnitTests.UiWorkerThread
             Assert.Equal(1, counter);
         }
 
-        [Fact]
+        [WpfFact]
         public async Task ExecuteOnUIAsync_Basic_Return()
         {
             //Configuration
@@ -117,7 +117,7 @@ namespace PRF.WPFCore.UnitTests.UiWorkerThread
         }
 
 
-        [Fact]
+        [WpfFact]
         public async Task ExecuteOnUIAsync_Return_Task()
         {
             //Configuration
@@ -136,7 +136,7 @@ namespace PRF.WPFCore.UnitTests.UiWorkerThread
             Assert.Equal(1, counter);
         }
 
-        [Fact]
+        [WpfFact]
         public async Task ExecuteOnUIAsync_But_Sync_Action()
         {
             //Configuration
@@ -153,7 +153,7 @@ namespace PRF.WPFCore.UnitTests.UiWorkerThread
             Assert.Equal(1, counter);
         }
 
-        [Fact]
+        [WpfFact]
         public async Task ExecuteOnUI_forward_exception()
         {
             //Configuration
