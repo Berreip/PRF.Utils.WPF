@@ -1,26 +1,16 @@
 ﻿using System;
 using System.Globalization;
 using Moq;
-using NUnit.Framework;
 using PRF.WPFCore.Converters;
+using Xunit;
 
 namespace PRF.WPFCore.UnitTests.Converters
 {
-    [TestFixture]
     public class InvertBoolConverterTest
     {
-        private InvertBoolConverter _instance;
+        private readonly InvertBoolConverter _instance = new InvertBoolConverter();
 
-        [SetUp]
-        public void TestInitialize()
-        {
-            // mock:
-            
-            // instance de test:
-            _instance = new InvertBoolConverter();
-        }
-        
-        [Test]
+        [Fact]
         public void ConvertV1()
         {
             //Configuration
@@ -29,11 +19,11 @@ namespace PRF.WPFCore.UnitTests.Converters
             var res = _instance.Convert(true, typeof(bool), null, It.IsAny<CultureInfo>());
 
             //Verify
-            Assert.IsNotNull(res);
-            Assert.IsFalse((bool)res);
+            Assert.NotNull(res);
+            Assert.False((bool)res);
         }
 
-        [Test]
+        [Fact]
         public void ConvertV2()
         {
             //Configuration
@@ -42,11 +32,11 @@ namespace PRF.WPFCore.UnitTests.Converters
             var res = _instance.Convert(false, typeof(bool), null, It.IsAny<CultureInfo>());
 
             //Verify
-            Assert.IsNotNull(res);
-            Assert.IsTrue((bool)res);
+            Assert.NotNull(res);
+            Assert.True((bool)res);
         }
 
-        [Test]
+        [Fact]
         public void ConvertBackV1()
         {
             //Configuration
@@ -55,11 +45,11 @@ namespace PRF.WPFCore.UnitTests.Converters
             var res = _instance.ConvertBack(true, typeof(bool), null, It.IsAny<CultureInfo>());
 
             //Verify
-            Assert.IsNotNull(res);
-            Assert.IsFalse((bool)res);
+            Assert.NotNull(res);
+            Assert.False((bool)res);
         }
 
-        [Test]
+        [Fact]
         public void ConvertBackV2()
         {
             //Configuration
@@ -68,11 +58,11 @@ namespace PRF.WPFCore.UnitTests.Converters
             var res = _instance.ConvertBack(false, typeof(bool), null, It.IsAny<CultureInfo>());
 
             //Verify
-            Assert.IsNotNull(res);
-            Assert.IsTrue((bool)res);
+            Assert.NotNull(res);
+            Assert.True((bool)res);
         }
 
-        [Test]
+        [Fact]
         public void ConvertNotABool()
         {
             //Configuration
@@ -83,7 +73,7 @@ namespace PRF.WPFCore.UnitTests.Converters
             //Verify
         }
 
-        [Test]
+        [Fact]
         public void ConvertBackNotABool()
         {
             //Configuration

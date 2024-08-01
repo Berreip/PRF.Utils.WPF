@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using NUnit.Framework;
 using PRF.WPFCore.UiWorkerThread;
+using Xunit;
 
 namespace PRF.WPFCore.UnitTests.UiWorkerThread
 {
-    [TestFixture]
-    [Apartment(ApartmentState.STA)]
-    internal sealed class UiThreadDispatcherTests
+    public sealed class UiThreadDispatcherTests
     {
-        [Test]
+        [Fact]
         public async Task ExecuteOnUI_With_Task()
         {
             //Configuration
@@ -25,10 +23,10 @@ namespace PRF.WPFCore.UnitTests.UiWorkerThread
 
 
             //Verify
-            Assert.AreEqual(1, counter);
+            Assert.Equal(1, counter);
         }
 
-        [Test]
+        [Fact]
         public void ExecuteOnUI_Basic()
         {
             //Configuration
@@ -42,10 +40,10 @@ namespace PRF.WPFCore.UnitTests.UiWorkerThread
             });
 
             //Verify
-            Assert.AreEqual(1, counter);
+            Assert.Equal(1, counter);
         }
 
-        [Test]
+        [Fact]
         public async Task ExecuteOnUI_Task_Return()
         {
             //Configuration
@@ -60,11 +58,11 @@ namespace PRF.WPFCore.UnitTests.UiWorkerThread
             });
 
             //Verify
-            Assert.AreEqual(4, res);
-            Assert.AreEqual(1, counter);
+            Assert.Equal(4, res);
+            Assert.Equal(1, counter);
         }
 
-        [Test]
+        [Fact]
         public void ExecuteOnUI_Return()
         {
             //Configuration
@@ -78,11 +76,11 @@ namespace PRF.WPFCore.UnitTests.UiWorkerThread
             });
 
             //Verify
-            Assert.AreEqual(4, res);
-            Assert.AreEqual(1, counter);
+            Assert.Equal(4, res);
+            Assert.Equal(1, counter);
         }
 
-        [Test]
+        [Fact]
         public async Task ExecuteOnUIAsync()
         {
             //Configuration
@@ -96,10 +94,10 @@ namespace PRF.WPFCore.UnitTests.UiWorkerThread
             });
 
             //Verify
-            Assert.AreEqual(1, counter);
+            Assert.Equal(1, counter);
         }
 
-        [Test]
+        [Fact]
         public async Task ExecuteOnUIAsync_Basic_Return()
         {
             //Configuration
@@ -114,12 +112,12 @@ namespace PRF.WPFCore.UnitTests.UiWorkerThread
             });
 
             //Verify
-            Assert.AreEqual(4, res);
-            Assert.AreEqual(1, counter);
+            Assert.Equal(4, res);
+            Assert.Equal(1, counter);
         }
 
 
-        [Test]
+        [Fact]
         public async Task ExecuteOnUIAsync_Return_Task()
         {
             //Configuration
@@ -134,11 +132,11 @@ namespace PRF.WPFCore.UnitTests.UiWorkerThread
             });
 
             //Verify
-            Assert.AreEqual(4, res);
-            Assert.AreEqual(1, counter);
+            Assert.Equal(4, res);
+            Assert.Equal(1, counter);
         }
 
-        [Test]
+        [Fact]
         public async Task ExecuteOnUIAsync_But_Sync_Action()
         {
             //Configuration
@@ -152,16 +150,16 @@ namespace PRF.WPFCore.UnitTests.UiWorkerThread
             });
 
             //Verify
-            Assert.AreEqual(1, counter);
+            Assert.Equal(1, counter);
         }
 
-        [Test]
-        public void ExecuteOnUI_forward_exception()
+        [Fact]
+        public async Task ExecuteOnUI_forward_exception()
         {
             //Configuration
 
             //Test
-            Assert.ThrowsAsync<ArithmeticException>(async () =>
+            await Assert.ThrowsAsync<ArithmeticException>(async () =>
             {
                 await UiThreadDispatcher.ExecuteOnUI(async () =>
                 {

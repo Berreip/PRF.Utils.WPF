@@ -2,15 +2,14 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Moq;
-using NUnit.Framework;
 using PRF.WPFCore.Commands;
+using Xunit;
 
 namespace PRF.WPFCore.UnitTests.Commands
 {
-    [TestFixture]
-    internal sealed class DelegateCommandLightTests
+    public sealed class DelegateCommandLightTests
     {
-        [Test]
+        [Fact]
         public void DelegateCommand_Execute_Nominal()
         {
             //Arrange
@@ -24,10 +23,10 @@ namespace PRF.WPFCore.UnitTests.Commands
             sut.Execute();
 
             //Assert
-            Assert.AreEqual(1, count);
+            Assert.Equal(1, count);
         }
 
-        [Test]
+        [Fact]
         public void DelegateCommand_Execute_Nominal_Ignore_Parameter()
         {
             //Arrange
@@ -41,10 +40,10 @@ namespace PRF.WPFCore.UnitTests.Commands
             sut.Execute(It.IsAny<object>());
 
             //Assert
-            Assert.AreEqual(1, count);
+            Assert.Equal(1, count);
         }
 
-        [Test]
+        [Fact]
         public void DelegateCommand_Parameter_Execute_Nominal()
         {
             //Arrange
@@ -52,17 +51,17 @@ namespace PRF.WPFCore.UnitTests.Commands
             var sut = new DelegateCommandLight<int>((i) =>
             {
                 Interlocked.Increment(ref count);
-                Assert.AreEqual(42, i);
+                Assert.Equal(42, i);
             });
 
             //Act
             sut.Execute(42);
 
             //Assert
-            Assert.AreEqual(1, count);
+            Assert.Equal(1, count);
         }
 
-        [Test]
+        [Fact]
         public void DelegateCommand_Parameter_Execute_With_Async_Send_exception_in_ctor()
         {
             //Arrange
@@ -82,7 +81,7 @@ namespace PRF.WPFCore.UnitTests.Commands
             //Assert
         }
 
-        [Test]
+        [Fact]
         public async Task DelegateCommandAsync_Without_Parameters()
         {
             //Arrange
@@ -94,13 +93,13 @@ namespace PRF.WPFCore.UnitTests.Commands
             });
 
             //Act
-            await sut.ExecuteAsync().ConfigureAwait(false);
+            await sut.ExecuteAsync().ConfigureAwait(true);
 
             //Assert
-            Assert.AreEqual(1, count);
+            Assert.Equal(1, count);
         }
 
-        [Test]
+        [Fact]
         public async Task DelegateCommandAsync_With_Parameters()
         {
             //Arrange
@@ -108,15 +107,15 @@ namespace PRF.WPFCore.UnitTests.Commands
             var sut = new DelegateCommandLightAsync<string>(async (s) =>
             {
                 await Task.Delay(5);
-                Assert.AreEqual("foo", s);
+                Assert.Equal("foo", s);
                 Interlocked.Increment(ref count);
             });
 
             //Act
-            await sut.ExecuteAsync("foo").ConfigureAwait(false);
+            await sut.ExecuteAsync("foo").ConfigureAwait(true);
 
             //Assert
-            Assert.AreEqual(1, count);
+            Assert.Equal(1, count);
         }
 
     }

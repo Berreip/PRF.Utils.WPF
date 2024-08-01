@@ -1,5 +1,5 @@
 ﻿using System.Threading;
-using NUnit.Framework;
+using Xunit;
 
 namespace PRF.WPFCore.UnitTests.NotifyTest
 {
@@ -25,8 +25,8 @@ namespace PRF.WPFCore.UnitTests.NotifyTest
             get => _property2;
             set => SetProperty(ref _property2, value);
         }
-        
-        
+
+
         private string _propertyNullable;
 
         public string PropertyNullable
@@ -41,18 +41,11 @@ namespace PRF.WPFCore.UnitTests.NotifyTest
         }
     }
 
-    [TestFixture]
-    internal sealed class ViewModelUncheckedBaseTests
+    public sealed class ViewModelUncheckedBaseTests
     {
-        private TestViewModelUncheckedBaseClass _sut;
+        private readonly TestViewModelUncheckedBaseClass _sut = new TestViewModelUncheckedBaseClass();
 
-        [SetUp]
-        public void TestInitialize()
-        {
-            _sut = new TestViewModelUncheckedBaseClass();
-        }
-
-        [Test]
+        [Fact]
         public void Notify_Nominal()
         {
             //Configuration
@@ -66,11 +59,11 @@ namespace PRF.WPFCore.UnitTests.NotifyTest
             }
 
             //Verify
-            Assert.AreEqual(5, count);
-            Assert.AreEqual(4, _sut.Property);
+            Assert.Equal(5, count);
+            Assert.Equal(4, _sut.Property);
         }
 
-        [Test]
+        [Fact]
         public void SetProperty_Nominal()
         {
             //Configuration
@@ -81,11 +74,11 @@ namespace PRF.WPFCore.UnitTests.NotifyTest
             _sut.Property2 = true;
 
             //Verify
-            Assert.AreEqual(1, count);
-            Assert.IsTrue(_sut.Property2);
+            Assert.Equal(1, count);
+            Assert.True(_sut.Property2);
         }
 
-        [Test]
+        [Fact]
         public void SetProperty_Nominal_Multiple()
         {
             //Configuration
@@ -97,11 +90,11 @@ namespace PRF.WPFCore.UnitTests.NotifyTest
             _sut.Property2 = true;
 
             //Verify
-            Assert.AreEqual(1, count);
-            Assert.IsTrue(_sut.Property2);
+            Assert.Equal(1, count);
+            Assert.True(_sut.Property2);
         }
 
-        [Test]
+        [Fact]
         public void SetProperty_Nullable_Nominal()
         {
             //Configuration
@@ -112,11 +105,11 @@ namespace PRF.WPFCore.UnitTests.NotifyTest
             _sut.PropertyNullable = "niak";
 
             //Verify
-            Assert.AreEqual(1, count);
-            Assert.AreEqual("niak", _sut.PropertyNullable);
+            Assert.Equal(1, count);
+            Assert.Equal("niak", _sut.PropertyNullable);
         }
 
-        [Test]
+        [Fact]
         public void SetProperty_Nullable_Both_Null()
         {
             //Configuration
@@ -127,11 +120,11 @@ namespace PRF.WPFCore.UnitTests.NotifyTest
             _sut.PropertyNullable = null;
 
             //Verify
-            Assert.AreEqual(0, count); // was null at first
-            Assert.AreEqual(null, _sut.PropertyNullable);
+            Assert.Equal(0, count); // was null at first
+            Assert.Null(_sut.PropertyNullable);
         }
 
-        [Test]
+        [Fact]
         public void SetProperty_Nullable_From_AndTo_Null()
         {
             //Configuration
@@ -143,11 +136,11 @@ namespace PRF.WPFCore.UnitTests.NotifyTest
             _sut.PropertyNullable = null;
 
             //Verify
-            Assert.AreEqual(2, count);
-            Assert.AreEqual(null, _sut.PropertyNullable);
+            Assert.Equal(2, count);
+            Assert.Null(_sut.PropertyNullable);
         }
-        
-        [Test]
+
+        [Fact]
         public void RaisePropertyChanged_do_not_throw_when_property_name_is_not_a_valid_property_of_the_object()
         {
             //Configuration
@@ -156,8 +149,6 @@ namespace PRF.WPFCore.UnitTests.NotifyTest
             _sut.RaiseExternal("stub_prop");
 
             //Verify
-            Assert.Pass();
         }
-
     }
 }

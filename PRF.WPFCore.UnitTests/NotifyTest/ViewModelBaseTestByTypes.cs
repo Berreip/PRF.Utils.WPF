@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Documents;
-using NUnit.Framework;
+using Xunit;
 
 namespace PRF.WPFCore.UnitTests.NotifyTest
 {
@@ -70,24 +69,19 @@ namespace PRF.WPFCore.UnitTests.NotifyTest
         }
     }
 
-    [TestFixture]
-    internal sealed class ViewModelBaseTestByTypes
+    public sealed class ViewModelBaseTestByTypes
     {
-        private TestClass _sut;
-        private List<string> _raises;
+        private readonly TestClass _sut;
+        private readonly List<string> _raises = new List<string>();
 
-        [SetUp]
-        public void TestInitialize()
+        public ViewModelBaseTestByTypes()
         {
-            // mock:
-            _raises = new List<string>();
-
             // software under test:
             _sut = new TestClass();
             _sut.PropertyChanged += (_, args) => _raises.Add(args.PropertyName);
         }
 
-        [Test]
+        [Fact]
         public void Int_raise_when_Changed()
         {
             //Configuration
@@ -96,10 +90,10 @@ namespace PRF.WPFCore.UnitTests.NotifyTest
             _sut.Int++;
 
             //Verify
-            Assert.AreEqual(nameof(TestClass.Int), _raises.Single());
+            Assert.Equal(nameof(TestClass.Int), _raises.Single());
         }
 
-        [Test]
+        [Fact]
         public void int_do_not_raise_when_not_Changed()
         {
             //Configuration
@@ -108,10 +102,10 @@ namespace PRF.WPFCore.UnitTests.NotifyTest
             _sut.Int = _sut.Int;
 
             //Verify
-            Assert.AreEqual(0, _raises.Count);
+            Assert.Empty(_raises);
         }
         
-        [Test]
+        [Fact]
         public void Reference_raise_when_Changed()
         {
             //Configuration
@@ -121,10 +115,10 @@ namespace PRF.WPFCore.UnitTests.NotifyTest
             _sut.Reference = obj;
 
             //Verify
-            Assert.AreEqual(nameof(TestClass.Reference), _raises.Single());
+            Assert.Equal(nameof(TestClass.Reference), _raises.Single());
         }
 
-        [Test]
+        [Fact]
         public void Reference_do_not_raise_when_not_Changed()
         {
             //Configuration
@@ -136,10 +130,10 @@ namespace PRF.WPFCore.UnitTests.NotifyTest
             _sut.Reference = obj;
 
             //Verify
-            Assert.AreEqual(0, _raises.Count);
+            Assert.Empty(_raises);
         }  
         
-        [Test]
+        [Fact]
         public void Reference_raise_when_Changed_to_null()
         {
             //Configuration
@@ -151,10 +145,10 @@ namespace PRF.WPFCore.UnitTests.NotifyTest
             _sut.Reference = null;
 
             //Verify
-            Assert.AreEqual(nameof(TestClass.Reference), _raises.Single());
+            Assert.Equal(nameof(TestClass.Reference), _raises.Single());
         }
 
-        [Test]
+        [Fact]
         public void Reference_with_EqualsOverride_raise_when_Changed()
         {
             //Configuration
@@ -164,10 +158,10 @@ namespace PRF.WPFCore.UnitTests.NotifyTest
             _sut.Reference = obj;
 
             //Verify
-            Assert.AreEqual(nameof(TestClass.Reference), _raises.Single());
+            Assert.Equal(nameof(TestClass.Reference), _raises.Single());
         }
 
-        [Test]
+        [Fact]
         public void Reference_with_EqualsOverride_do_not_raise_when_not_Changed()
         {
             //Configuration
@@ -178,10 +172,10 @@ namespace PRF.WPFCore.UnitTests.NotifyTest
             _sut.Reference = new ObjectWithEqualsOverride(1);
 
             //Verify
-            Assert.AreEqual(0, _raises.Count);
+            Assert.Empty(_raises);
         }  
         
-        [Test]
+        [Fact]
         public void Reference_with_EqualsOverride_raise_when_Changed_to_null()
         {
             //Configuration
@@ -192,10 +186,10 @@ namespace PRF.WPFCore.UnitTests.NotifyTest
             _sut.Reference = null;
 
             //Verify
-            Assert.AreEqual(nameof(TestClass.Reference), _raises.Single());
+            Assert.Equal(nameof(TestClass.Reference), _raises.Single());
         }
 
-        [Test]
+        [Fact]
         public void double_do_not_raise_when_not_Changed()
         {
             //Configuration
@@ -204,10 +198,10 @@ namespace PRF.WPFCore.UnitTests.NotifyTest
             _sut.Double = _sut.Double;
 
             //Verify
-            Assert.AreEqual(0, _raises.Count);
+            Assert.Empty(_raises);
         }
 
-        [Test]
+        [Fact]
         public void Double_raise_when_Changed()
         {
             //Configuration
@@ -216,10 +210,10 @@ namespace PRF.WPFCore.UnitTests.NotifyTest
             _sut.Double++;
 
             //Verify
-            Assert.AreEqual(nameof(TestClass.Double), _raises.Single());
+            Assert.Equal(nameof(TestClass.Double), _raises.Single());
         }
         
-        [Test]
+        [Fact]
         public void Double_do_not_raise_when_not_Changed_from_less_that_epsilon()
         {
             //Configuration
@@ -228,10 +222,10 @@ namespace PRF.WPFCore.UnitTests.NotifyTest
             _sut.Double += 0.000000001f;
 
             //Verify
-            Assert.AreEqual(0, _raises.Count);
+            Assert.Empty(_raises);
         }
 
-        [Test]
+        [Fact]
         public void Double_raise_when_Changed_when_updated_Epsilon()
         {
             //Configuration
@@ -241,11 +235,11 @@ namespace PRF.WPFCore.UnitTests.NotifyTest
             _sut.Double += 0.000000001f;
 
             //Verify
-            Assert.AreEqual(nameof(TestClass.Double), _raises.Single());
+            Assert.Equal(nameof(TestClass.Double), _raises.Single());
         }
 
 
-        [Test]
+        [Fact]
         public void Float_do_not_raise_when_not_Changed()
         {
             //Configuration
@@ -254,10 +248,10 @@ namespace PRF.WPFCore.UnitTests.NotifyTest
             _sut.Float = _sut.Float;
 
             //Verify
-            Assert.AreEqual(0, _raises.Count);
+            Assert.Empty(_raises);
         }
 
-        [Test]
+        [Fact]
         public void Float_raise_when_Changed()
         {
             //Configuration
@@ -266,10 +260,10 @@ namespace PRF.WPFCore.UnitTests.NotifyTest
             _sut.Float += 0.01f;
 
             //Verify
-            Assert.AreEqual(nameof(TestClass.Float), _raises.Single());
+            Assert.Equal(nameof(TestClass.Float), _raises.Single());
         }
 
-        [Test]
+        [Fact]
         public void Float_do_not_raise_when_not_Changed_from_less_that_epsilon()
         {
             //Configuration
@@ -278,10 +272,10 @@ namespace PRF.WPFCore.UnitTests.NotifyTest
             _sut.Float += 0.000000001f;
 
             //Verify
-            Assert.AreEqual(0, _raises.Count);
+            Assert.Empty(_raises);
         }
 
-        [Test]
+        [Fact]
         public void Float_raise_when_Changed_when_updated_Epsilon()
         {
             //Configuration
@@ -291,10 +285,10 @@ namespace PRF.WPFCore.UnitTests.NotifyTest
             _sut.Float += 0.000000001f;
 
             //Verify
-            Assert.AreEqual(nameof(TestClass.Float), _raises.Single());
+            Assert.Equal(nameof(TestClass.Float), _raises.Single());
         }
 
-        [Test]
+        [Fact]
         public void Int_do_not_raise_when_not_Changed()
         {
             //Configuration
@@ -303,10 +297,10 @@ namespace PRF.WPFCore.UnitTests.NotifyTest
             _sut.Int = _sut.Int;
 
             //Verify
-            Assert.AreEqual(0, _raises.Count);
+            Assert.Empty(_raises);
         }
 
-        [Test]
+        [Fact]
         public void IntNullable_raise_when_Changed_from_null()
         {
             //Configuration
@@ -315,10 +309,10 @@ namespace PRF.WPFCore.UnitTests.NotifyTest
             _sut.IntNullable = 45;
 
             //Verify
-            Assert.AreEqual(nameof(TestClass.IntNullable), _raises.Single());
+            Assert.Equal(nameof(TestClass.IntNullable), _raises.Single());
         }
 
-        [Test]
+        [Fact]
         public void IntNullable_raise_when_Changed_from_Value_not_null()
         {
             //Configuration
@@ -329,10 +323,10 @@ namespace PRF.WPFCore.UnitTests.NotifyTest
             _sut.IntNullable = 46;
 
             //Verify
-            Assert.AreEqual(nameof(TestClass.IntNullable), _raises.Single());
+            Assert.Equal(nameof(TestClass.IntNullable), _raises.Single());
         }
 
-        [Test]
+        [Fact]
         public void IntNullable_raise_when_Changed_from_Value_not_null_To_null()
         {
             //Configuration
@@ -343,10 +337,10 @@ namespace PRF.WPFCore.UnitTests.NotifyTest
             _sut.IntNullable = null;
 
             //Verify
-            Assert.AreEqual(nameof(TestClass.IntNullable), _raises.Single());
+            Assert.Equal(nameof(TestClass.IntNullable), _raises.Single());
         }
 
-        [Test]
+        [Fact]
         public void IntNullable_do_not_raise_when_not_Changed()
         {
             //Configuration
@@ -355,7 +349,7 @@ namespace PRF.WPFCore.UnitTests.NotifyTest
             _sut.IntNullable = _sut.IntNullable;
 
             //Verify
-            Assert.AreEqual(0, _raises.Count);
+            Assert.Empty(_raises);
         }
     }
 

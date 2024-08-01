@@ -1,17 +1,16 @@
 ﻿using System;
-using System.Threading;
 using System.Windows;
-using NUnit.Framework;
 using PRF.Utils.Injection.Containers;
 using PRF.Utils.Injection.Utils;
+using Xunit;
+// ReSharper disable ClassNeverInstantiated.Global
+// ReSharper disable ClassNeverInstantiated.Local
 
 namespace PRF.WPFCore.UnitTests.BootStrappers
 {
-    [TestFixture]
-    [Apartment(ApartmentState.STA)]
-    internal sealed class BootStrapperPresentationTests
+    public sealed class BootStrapperPresentationTests
     {
-        [Test]
+        [Fact]
         public void RegisterTests()
         {
             //Configuration
@@ -21,10 +20,10 @@ namespace PRF.WPFCore.UnitTests.BootStrappers
             var res = sut.Run();
 
             //Verify
-            Assert.IsNotNull(res);
+            Assert.NotNull(res);
         }
 
-        [Test]
+        [Fact]
         public void VerifyNominal()
         {
             //Configuration
@@ -34,10 +33,10 @@ namespace PRF.WPFCore.UnitTests.BootStrappers
             var res = sut.Verify();
 
             //Verify
-            Assert.IsNull(res);
+            Assert.Null(res);
         }
 
-        [Test]
+        [Fact]
         public void Verify_Issues()
         {
             //Configuration
@@ -54,10 +53,10 @@ namespace PRF.WPFCore.UnitTests.BootStrappers
 
         private class MissingRegisterType
         {
-            public MissingRegisterType(IOtherUnknowType _) { }
+            public MissingRegisterType(IOtherUnknownType _) { }
         }
 
-        private interface IOtherUnknowType { }
+        private interface IOtherUnknownType { }
 
 
         private sealed class BootForUnitTests : WPFCore.BootStrappers.BootStrapperPresentation<ViewUnitTest, ViewModelUnitTest>
