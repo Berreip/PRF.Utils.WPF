@@ -9,12 +9,13 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:navigation="clr-namespace:PRF.WPFCore.Navigation;assembly=PRF.WPFCore"
         xmlns:views="clr-namespace:WpfModelApp.WPFCore.Views"
-        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.Foreground="{DynamicResource MaterialDesign.Brush.Foreground}"
         TextElement.FontWeight="Regular"
         TextElement.FontSize="13"
         TextOptions.TextFormattingMode="Ideal"
         TextOptions.TextRenderingMode="Auto"
-        Background="{DynamicResource MaterialDesignPaper}"
+        Background="{DynamicResource MaterialDesign.Brush.Background}"
+        Foreground="{DynamicResource MaterialDesign.Brush.Foreground}"
         FontFamily="{DynamicResource MaterialDesignFont}"
         Title="MainWindowView" Height="450" Width="800"
         d:DataContext="{d:DesignInstance views:MainWindowViewModel, IsDesignTimeCreatable=False}">
@@ -48,7 +49,8 @@
 
         <!--Contenu-->
         <DockPanel>
-            <materialDesign:ColorZone Padding="16" materialDesign:ShadowAssist.ShadowDepth="Depth2" Mode="PrimaryMid"
+            <materialDesign:ColorZone Padding="16"
+                                      materialDesign:ElevationAssist.Elevation="Dp2" Mode="PrimaryMid"
                                       DockPanel.Dock="Top">
                 <DockPanel>
                     <ToggleButton x:Name="MenuToggleButton"

@@ -21,7 +21,7 @@
             Mode="PrimaryDark"
             Padding="16"
             CornerRadius="10"
-            materialDesign:ShadowAssist.ShadowDepth="Depth3"
+            materialDesign:ElevationAssist.Elevation="Dp3"
             ClipToBounds="False">
             <materialDesign:PackIcon Kind="AlertCircleOutline" Height="70" Width="70" Margin="10"
                                      VerticalAlignment="Center" HorizontalAlignment="Center" />
@@ -29,7 +29,7 @@
 
         <materialDesign:Card Grid.Column="1"
                              Margin="10"
-                             materialDesign:ShadowAssist.ShadowDepth="Depth1"
+                             materialDesign:ElevationAssist.Elevation="Dp1"
                              Padding="10">
             <Grid Margin="5">
                 <Grid.RowDefinitions>
