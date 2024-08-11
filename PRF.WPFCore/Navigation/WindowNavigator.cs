@@ -17,7 +17,7 @@ namespace PRF.WPFCore.Navigation
         /// <summary>
         /// Le panel affiché pour ce navigateur
         /// </summary>
-        NavigablePanelDependencyData NavigablePanelData { get; }
+        NavigablePanelDependencyData? NavigablePanelData { get; }
 
         /// <summary>
         /// On demande la navigation vers la première vue de la liste
@@ -40,7 +40,7 @@ namespace PRF.WPFCore.Navigation
     {
         private readonly Dictionary<Type, INavigationCommand> _commandsReference = new Dictionary<Type, INavigationCommand>();
         private readonly object _key = new object();
-        private NavigablePanelDependencyData _navigablePanelData;
+        private NavigablePanelDependencyData? _navigablePanelData;
 
         /// <summary>
         /// Ajoute des boutons de commande et une vue à ce panneau de navigation (permet de lier plusieurs boutons à l'affichage d'une même zone)
@@ -48,7 +48,7 @@ namespace PRF.WPFCore.Navigation
         /// <typeparam name="T">le type de la vue navigable</typeparam>
         /// <param name="commandName">le nom de la commande pour un éventuel affichage</param>
         /// <param name="canExecute">la condition d'execution éventuelle</param>
-        protected INavigationCommand AddNavigationView<T>(string commandName, Func<bool> canExecute = null) where T : INavigableView
+        protected INavigationCommand AddNavigationView<T>(string commandName, Func<bool>? canExecute = null) where T : INavigableView
         {
             var navigationCommand = new NavigationCommand(typeof(T), commandName, UpdateNavigablePanelData, canExecute);
             _commandsReference.Add(typeof(T), navigationCommand);
@@ -68,7 +68,7 @@ namespace PRF.WPFCore.Navigation
         }
 
         /// <inheritdoc/>
-        public void RequestMainPanelNavigation(Type targetType)
+        public void RequestMainPanelNavigation(Type? targetType)
         {
             if (targetType == null || !_commandsReference.TryGetValue(targetType, out var command))
             {
@@ -98,7 +98,7 @@ namespace PRF.WPFCore.Navigation
 
 
         /// <inheritdoc/>
-        public NavigablePanelDependencyData NavigablePanelData
+        public NavigablePanelDependencyData? NavigablePanelData
         {
             get => _navigablePanelData;
             private set
@@ -118,9 +118,9 @@ namespace PRF.WPFCore.Navigation
         {
             private bool _isSelected;
 
-            public event Action<bool> IsSelectedChanged;
+            public event Action<bool>? IsSelectedChanged;
 
-            public NavigationCommand(Type navigationViewType, string name, Action<Type> execute, Func<bool> canExecute = null)
+            public NavigationCommand(Type navigationViewType, string name, Action<Type> execute, Func<bool>? canExecute = null)
             {
                 Name = name;
                 RegisteredType = navigationViewType;
@@ -192,7 +192,7 @@ namespace PRF.WPFCore.Navigation
         {
             if (d is ContentControl content && e.NewValue is NavigablePanelDependencyData dependencyData) try
                 {
-                    INavigableView previousNavigableView = null;
+                    INavigableView? previousNavigableView = null;
                     if (content.HasContent && content.Content is INavigableView pView)
                     {
                         previousNavigableView = pView;
@@ -206,15 +206,19 @@ namespace PRF.WPFCore.Navigation
                         }
                     }
 
-                    var navigableView = ContainerHolder.Container.Resolve<INavigableView>(dependencyData.ViewType);
+                    var container = ContainerHolder.Container;
+                    if (container != null)
+                    {
+                        var navigableView = container.Resolve<INavigableView>(dependencyData.ViewType);
 
-                    // préviens la nouvelle vue que l'on y rentre
-                    navigableView.NavigateToCurrentRequested();
-                    // set le contenu:
-                    content.Content = navigableView;
+                        // préviens la nouvelle vue que l'on y rentre
+                        navigableView.NavigateToCurrentRequested();
+                        // set le contenu:
+                        content.Content = navigableView;
 
-                    // préviens l'ancienne vue que l'on la quitte (après qu'elle ne soit plus affichée)
-                    previousNavigableView?.NavigateFromCurrentRequested();
+                        // préviens l'ancienne vue que l'on la quitte (après qu'elle ne soit plus affichée)
+                        previousNavigableView?.NavigateFromCurrentRequested();
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -232,7 +236,7 @@ namespace PRF.WPFCore.Navigation
         /// <summary>
         /// The displayed view type
         /// </summary>
-        public Type ViewType { get; }
+        public Type? ViewType { get; }
 
         /// <summary>
         /// Empty constructor

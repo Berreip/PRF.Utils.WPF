@@ -19,7 +19,7 @@ namespace PRF.WPFCore.Helpers
         /// <summary>
         /// Récupère la fenêtre parente d'un DependencyObject
         /// </summary>
-        public static Window GetWindowsParent(this DependencyObject canvas)
+        public static Window? GetWindowsParent(this DependencyObject canvas)
         {
             return RecursiveFindParent<Window>(canvas);
         }
@@ -31,7 +31,7 @@ namespace PRF.WPFCore.Helpers
         /// <param name="d">Initial object</param>
         /// <typeparam name="T">Type of parent to find</typeparam>
         /// <returns>The parent dependency object or null</returns>
-        public static T RecursiveFindParent<T>(this DependencyObject d) where T : class
+        public static T? RecursiveFindParent<T>(this DependencyObject d) where T : class
         {
             var current = d;
             var result = d;
@@ -69,7 +69,7 @@ namespace PRF.WPFCore.Helpers
         /// <param name="source">Source control</param>
         /// <typeparam name="T">Type of children we are looking for</typeparam>
         /// <returns>List of all recursively found children of the given type</returns>
-        public static IEnumerable<T> FindChildren<T>(this DependencyObject source) where T : DependencyObject
+        public static IEnumerable<T> FindChildren<T>(this DependencyObject? source) where T : DependencyObject
         {
             if (source == null) yield break;
 

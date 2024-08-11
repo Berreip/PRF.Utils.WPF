@@ -10,12 +10,12 @@ namespace PRF.WPFCore
     public abstract class ViewModelBaseUnchecked : INotifyPropertyChanged
     {
         /// <inheritdoc />
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         /// <summary>
         /// Notifie un changement de valeur d'une propriété notifiable
         /// </summary>
-        protected void RaisePropertyChanged([CallerMemberName] string propertyName = null)
+        protected void RaisePropertyChanged([CallerMemberName] string? propertyName = null)
         {
             InvokeProperty(new PropertyChangedEventArgs(propertyName));
         }
@@ -24,7 +24,7 @@ namespace PRF.WPFCore
         /// <summary>
         /// Si la valeur a changé, met à jour l'ancienne valeur et notifie le changement de valeur de la propriété
         /// </summary>
-        protected bool SetProperty<T>(ref T oldValue, T newValue, [CallerMemberName] string propertyName = null)
+        protected bool SetProperty<T>(ref T oldValue, T newValue, [CallerMemberName] string? propertyName = null)
         {
             if (oldValue == null && newValue == null)
             {

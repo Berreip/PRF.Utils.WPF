@@ -1,7 +1,10 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
+using Microsoft.Win32;
 using PRF.Utils.CoreComponents.Extensions;
+using PRF.Utils.CoreComponents.IO;
 using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 
 // ReSharper disable MemberCanBePrivate.Global
@@ -24,7 +27,7 @@ namespace PRF.WPFCore.Browsers
         /// <param name="title">le titre de la fenetre ('Choose File' par défaut)</param>
         /// <param name="initialDirectory">le dossier initial à ouvrir (par défaut, il s'agit du dernier dossier ouvert)</param>
         /// <returns>le fichier choisi ou null si aucun choix</returns>
-        public static FileInfo OpenFileBrowser(string filter, string title = "Choose File", string initialDirectory = null)
+        public static FileInfo? OpenFileBrowser(string filter, string title = "Choose File", string? initialDirectory = null)
         {
             var ofd = initialDirectory != null
                 ? new OpenFileDialog
@@ -52,10 +55,13 @@ namespace PRF.WPFCore.Browsers
         /// <param name="description">la description de la fenetre </param>
         /// <param name="originalPath">le chemin source</param>
         /// <returns></returns>
-        public static DirectoryInfo OpenDirectoryBrowser(string description, string originalPath = "")
+        [Obsolete("this Open file browser use the WindowsForm legacy Dialog. Use the BrowserDialogManager.OpenFolderBrowser instead")]
+        public static DirectoryInfo? OpenDirectoryBrowser(string description, string originalPath = "")
         {
-            using (var fbd = new FolderBrowserDialog { SelectedPath = originalPath, Description = description })
+            using (var fbd = new FolderBrowserDialog())
             {
+                fbd.SelectedPath = originalPath;
+                fbd.Description = description;
                 return fbd.ShowDialog() == DialogResult.OK && !string.IsNullOrEmpty(fbd.SelectedPath) && Directory.Exists(fbd.SelectedPath)
                     ? new DirectoryInfo(fbd.SelectedPath)
                     : null;
@@ -63,20 +69,60 @@ namespace PRF.WPFCore.Browsers
         }
 
         /// <summary>
+        /// Open a folder browser
+        /// </summary>
+        /// <param name="description">The browser description</param>
+        /// <param name="originalPath">the initial path when opening the browser</param>
+        public static IDirectoryInfo? OpenFolderBrowser(string description, string originalPath = "")
+        {
+            var folderDialog = new OpenFolderDialog
+            {
+                Title = description,
+                InitialDirectory = originalPath,
+            };
+            if (folderDialog.ShowDialog() == true &&
+                !string.IsNullOrWhiteSpace(folderDialog.FolderName) &&
+                Directory.Exists(folderDialog.FolderName))
+            {
+                return new DirectoryInfoWrapper(folderDialog.FolderName);
+            }
+
+            return null;
+        }
+
+        /// <summary>
         /// Ouvre le dossier dans l'explorateur Windows
         /// </summary>
-        public static void OpenFolderInExplorer(this DirectoryInfo dir)
+        public static void OpenFolderInExplorer(this DirectoryInfo? dir)
         {
             if (dir == null || !dir.ExistsExplicit()) return;
             using var _ = Process.Start(new ProcessStartInfo("explorer.exe", dir.FullName));
         }
 
         /// <summary>
+        /// Ouvre le dossier dans l'explorateur Windows
+        /// </summary>
+        public static void OpenFolderInExplorer(this IDirectoryInfo? dir)
+        {
+            if (dir == null || !dir.ExistsExplicit) return;
+            using var _ = Process.Start(new ProcessStartInfo("explorer.exe", dir.FullName));
+        }
+
+        /// <summary>
         /// Ouvre le fichier avec le visualiseur de fichier par défaut
         /// </summary>
-        public static void OpenFileInExplorer(this FileInfo file)
+        public static void OpenFileInExplorer(this FileInfo? file)
         {
             if (file == null || !file.ExistsExplicit()) return;
+            using var _ = Process.Start(file.FullName);
+        }
+
+        /// <summary>
+        /// Ouvre le fichier avec le visualiseur de fichier par défaut
+        /// </summary>
+        public static void OpenFileInExplorer(this IFileInfo? file)
+        {
+            if (file == null || !file.ExistsExplicit) return;
             using var _ = Process.Start(file.FullName);
         }
     }

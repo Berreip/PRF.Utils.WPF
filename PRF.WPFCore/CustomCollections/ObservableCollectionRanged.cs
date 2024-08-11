@@ -45,7 +45,7 @@ namespace PRF.WPFCore.CustomCollections
     /// Représente une implémentation de l'ObservableCollection qui supporte l'ajout ou le retrait d'un ensemble d'éléments sans notifier pour chacun 
     /// d'entre eux mais seulement une seule fois.
     /// </summary>
-    public class ObservableCollectionRanged<T> : ObservableCollection<T>, IObservableCollectionRanged<T>
+    public class ObservableCollectionRanged<T> : ObservableCollection<T>, IObservableCollectionRanged<T> where T : notnull
     {  
         private readonly object _syncCollection = new object();
 

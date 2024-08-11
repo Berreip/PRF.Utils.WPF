@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -50,7 +51,7 @@ namespace PRF.WPFCore.PopupManager
     }
 
     /// <inheritdoc />
-    public sealed class WindowsPopupManager<TWindowKey> : IWindowsPopupManager<TWindowKey>
+    public sealed class WindowsPopupManager<TWindowKey> : IWindowsPopupManager<TWindowKey> where TWindowKey : notnull
     {
         private readonly IInjectionContainer _container;
         private readonly Dictionary<IPopupWindowsViewModel, WindowWrapper> _refWindowByViewModel
@@ -76,9 +77,9 @@ namespace PRF.WPFCore.PopupManager
         }
 
         /// <inheritdoc />
-        public async Task CloseWindowsAsync(IPopupWindowsViewModel viewModelReference)
+        public async Task CloseWindowsAsync(IPopupWindowsViewModel? viewModelReference)
         {
-            WindowWrapper view;
+            WindowWrapper? view;
             lock (_key)
             {
                 // retire le viewModel de la référence afin de ne pas pouvoir appeler cette méthode N fois le temps que la fenêtre se ferme
@@ -131,10 +132,13 @@ namespace PRF.WPFCore.PopupManager
         }
 
         /// <inheritdoc />
-        public void Show<T>(TWindowKey name, Action<T> loadAction)
+        public void Show<T>(TWindowKey name, Action<T>? loadAction)
             where T : class, IPopupWindowsViewModel
         {
-            if (TryGetType(name, out var refWindow)) return;
+            if (TryGetType(name, out var refWindow))
+            {
+                return;
+            }
             AsyncWrapperUi.DispatchUiAndWrapAsync(() => CreateViewAndViewModel(name, refWindow, loadAction).Show()).ConfigureAwait(false);
         }
 
@@ -145,23 +149,29 @@ namespace PRF.WPFCore.PopupManager
         }
 
         /// <inheritdoc />
-        public void ShowDialog<T>(TWindowKey name, Action<T> loadAction)
+        public void ShowDialog<T>(TWindowKey name, Action<T>? loadAction)
             where T : class, IPopupWindowsViewModel
         {
-            if (TryGetType(name, out var refWindow)) return;
+            if (TryGetType(name, out var refWindow))
+            {
+                return;
+            }
             AsyncWrapperUi.DispatchUiAndWrap(() => CreateViewAndViewModel(name, refWindow, loadAction).ShowDialog());
         }
 
-        private bool TryGetType(TWindowKey name, out RegistrationWindowsReference refWindow)
+        private bool TryGetType(TWindowKey name, [MaybeNullWhen(true)]out RegistrationWindowsReference refWindow)
         {
-            if (_windowReference.TryGetValue(name, out refWindow)) return false;
+            if (_windowReference.TryGetValue(name, out refWindow))
+            {
+                return false;
+            }
 
             MessageBox.Show($"@Erreur: impossible de trouver une fenêtre enregistrée avec le nom {name}");
             return true;
         }
 
         private Window CreateViewAndViewModel<T>(TWindowKey name, RegistrationWindowsReference refWindow,
-            Action<T> loadAction)
+            Action<T>? loadAction)
             where T : class, IPopupWindowsViewModel
         {
             lock (_key)
@@ -196,40 +206,42 @@ namespace PRF.WPFCore.PopupManager
             }
         }
 
-        private void OnWindowClosed(object sender, EventArgs e)
+        private void OnWindowClosed(object? sender, EventArgs e)
         {
-            try
+            if (sender is Window window)
             {
-                lock (_key)
+                try
                 {
-                    // sur fermeture de la fenêtre, on appelle la méthode OnClose du viewModel et on désabonne
-                    var window = (Window)sender;
-                    if (window.DataContext is IPopupWindowsViewModel viewModel)
+                    lock (_key)
                     {
-                        // si on a pas déjà retiré le view model du dictionnaire de référence, on le fait et on désabonne
-                        if (!_refWindowByViewModel.TryGetValue(viewModel, out var wrapper)) return;
+                        // sur fermeture de la fenêtre, on appelle la méthode OnClose du viewModel et on désabonne
+                        if (window.DataContext is IPopupWindowsViewModel viewModel)
+                        {
+                            // si on a pas déjà retiré le view model du dictionnaire de référence, on le fait et on désabonne
+                            if (!_refWindowByViewModel.Remove(viewModel, out var wrapper)) return;
 
-                        _refWindowByViewModel.Remove(viewModel);
-                        // retire éventuellement la fenêtre si elle est en mode TransientSingle
-                        _alreadyCreatedSingleWindows.Remove(wrapper.Name);
+                            // retire éventuellement la fenêtre si elle est en mode TransientSingle
+                            _alreadyCreatedSingleWindows.Remove(wrapper.Name);
 
-                        // on désabonne
-                        window.Closed -= OnWindowClosed;
+                            // on désabonne
+                            window.Closed -= OnWindowClosed;
 
-                        // Appelle la méthode OnClose du viewModel
-                        viewModel.OnClose();
-                        // important: Memoryleak: détache manuellement le datacontext
-                        window.DataContext = null;
-                    }
-                    else
-                    {
-                        throw new InvalidOperationException($"la fenêtre {window.GetType().Name} a un ViewModel qui n'est pas un {nameof(IPopupWindowsViewModel)}");
+                            // Appelle la méthode OnClose du viewModel
+                            viewModel.OnClose();
+                            // important: Memory leak : détache manuellement le datacontext
+                            window.DataContext = null;
+                        }
+                        else
+                        {
+                            throw new InvalidOperationException($"la fenêtre {window.GetType().Name} a un ViewModel qui n'est pas un {nameof(IPopupWindowsViewModel)}");
+                        }
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error : {ex}");
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error : {ex}");
+                }
+
             }
         }
         private sealed class WindowWrapper

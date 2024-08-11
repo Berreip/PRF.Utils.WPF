@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows</TargetFramework>
+    <TargetFramework>net8.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <StartupObject>WpfModelApp.WPFCore.Startup</StartupObject>
     <ApplicationIcon>Ncrow-Mega-Pack-1-Virtual-CloneDrive.ico</ApplicationIcon>

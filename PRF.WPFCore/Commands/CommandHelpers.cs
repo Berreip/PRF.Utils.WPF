@@ -5,11 +5,11 @@ namespace PRF.WPFCore.Commands
 {
     internal static class CommandHelpers
     {
-        public static T CheckCastParameter<T>(this object parameter)
+        public static T? CheckCastParameter<T>(this object? parameter)
         {
             try
             {
-                return (T)parameter;
+                return (T?)parameter;
             }
             catch (Exception e)
             {
@@ -17,7 +17,7 @@ namespace PRF.WPFCore.Commands
             }
         }
 
-        public static void ManageErrorOnCommand(this Exception ex, Action<Exception> exceptionCallBack)
+        public static void ManageErrorOnCommand(this Exception ex, Action<Exception>? exceptionCallBack)
         {
             if (exceptionCallBack != null)
             {

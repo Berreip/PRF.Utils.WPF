@@ -109,14 +109,14 @@ namespace PRF.WPFCore.BootStrappers
         /// <returns>la liste de méthodes (async évidemment)</returns>
         protected virtual IEnumerable<Func<CancellationToken, Task>> GetLoaderMethods(IInjectionContainer container)
         {
-            return new Func<CancellationToken, Task>[0];
+            return Array.Empty<Func<CancellationToken, Task>>();
         }
 
         /// <summary>
-        /// tache de chargement des données. à la fin du programme, on peut éventuellement annuler ce chargement. Dans tt les cas, 
+        /// Tache de chargement des données. à la fin du programme, on peut éventuellement annuler ce chargement. Dans tt les cas,
         /// il faut attendre cette tache, au moins pour récupérer les éventuelles exception qu'elle aurait stockée
         /// </summary>
-        private Task LoadingTask { get; set; }
+        private Task? LoadingTask { get; set; }
 
         private async Task LoadDataAsync(CancellationToken ctsToken, IEnumerable<Func<CancellationToken, Task>> loadingAsyncMethods)
         {
@@ -168,23 +168,21 @@ namespace PRF.WPFCore.BootStrappers
         {
             try
             {
-                if (!LoadingTask.IsCompleted)
+                var loadingTask = LoadingTask;
+                if (loadingTask != null && !loadingTask.IsCompleted)
                 {
-                    _cts?.Cancel();
+                    _cts.Cancel();
                     // le cts sera disposé dans le finally du chargement
 
-                    // la Loading Task gère les exception, donc l'attente ici ne devrait pas en générer
-                    LoadingTask.Wait(TimeSpan.FromSeconds(5));
+                    // la Loading Task gère les exceptions, donc l'attente ici ne devrait pas en générer
+                    loadingTask.Wait(TimeSpan.FromSeconds(5));
                 }
             }
             finally
             {
-                if (_container != null)
-                {
-                    _container.ResolveUnregisteredType -= ResolveUnregisteredType;
-                    //Les objets Disposables enregistrés dans le container sont diposés à la fermeture de l'application:
-                    _container.Dispose();
-                }
+                _container.ResolveUnregisteredType -= ResolveUnregisteredType;
+                //Les objets Disposables enregistrés dans le container sont diposés à la fermeture de l'application:
+                _container.Dispose();
             }
         }
     }

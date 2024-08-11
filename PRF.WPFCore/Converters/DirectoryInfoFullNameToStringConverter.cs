@@ -28,7 +28,7 @@ namespace PRF.WPFCore.Converters
         /// <summary>
         /// Fait la conversion inverse
         /// </summary>
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        public object? ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var str = value as string;
             return string.IsNullOrEmpty(str) ? null : new DirectoryInfo(str);

@@ -27,7 +27,7 @@ namespace PRF.WPFCore.UiWorkerThread
         /// <summary>
         /// Lance une action en asynchrone dans le Thread UI et capture l'exception pour afficher un message
         /// </summary>
-        public static async Task DispatchUiAndWrapAsync(Action toDo, Action onFinally = null)
+        public static async Task DispatchUiAndWrapAsync(Action toDo, Action? onFinally = null)
         {
             try
             {
@@ -46,7 +46,7 @@ namespace PRF.WPFCore.UiWorkerThread
         /// <summary>
         /// Lance une action en asynchrone dans le Thread UI et capture l'exception pour afficher un message
         /// </summary>
-        public static async Task DispatchUiAndWrapAsync(Func<Task> toDo, Action onFinally = null)
+        public static async Task DispatchUiAndWrapAsync(Func<Task> toDo, Action? onFinally = null)
         {
             try
             {
@@ -65,7 +65,7 @@ namespace PRF.WPFCore.UiWorkerThread
         /// <summary>
         /// Lance une action en asynchrone dans le Thread UI et capture l'exception pour afficher un message
         /// </summary>
-        public static async Task<T> DispatchUiAndWrapAsync<T>(Func<T> toDo, Action onFinally = null)
+        public static async Task<T?> DispatchUiAndWrapAsync<T>(Func<T> toDo, Action? onFinally = null)
         {
             try
             {
@@ -85,7 +85,7 @@ namespace PRF.WPFCore.UiWorkerThread
         /// <summary>
         /// Lance une action en asynchrone dans le Thread UI et capture l'exception pour afficher un message
         /// </summary>
-        public static async Task<T> DispatchUiAndWrapAsync<T>(Func<Task<T>> toDo, Action onFinally = null)
+        public static async Task<T?> DispatchUiAndWrapAsync<T>(Func<Task<T>> toDo, Action? onFinally = null)
         {
             try
             {
@@ -105,7 +105,7 @@ namespace PRF.WPFCore.UiWorkerThread
         /// <summary>
         /// Start and wrap with a try catch a sync action in the ui thread
         /// </summary>
-        public static void DispatchUiAndWrap(Action toDo, Action onFinally = null)
+        public static void DispatchUiAndWrap(Action toDo, Action? onFinally = null)
         {
             try
             {
@@ -121,7 +121,7 @@ namespace PRF.WPFCore.UiWorkerThread
             }
         }
         
-        private static void InvokeFinally(Action onFinally)
+        private static void InvokeFinally(Action? onFinally)
         {
             try
             {

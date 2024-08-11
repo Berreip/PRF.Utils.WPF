@@ -58,12 +58,12 @@ namespace PRF.WPFCore.Commands
         /// <summary>
         /// CanExecute with the correct expected type
         /// </summary>
-        bool CanExecute(T parameter);
+        bool CanExecute(T? parameter);
 
         /// <summary>
         /// Execute with the correct expected type
         /// </summary>
-        void Execute(T parameter);
+        void Execute(T? parameter);
     }
 
     /// <summary>
@@ -79,7 +79,7 @@ namespace PRF.WPFCore.Commands
         /// <summary>
         /// Execute with the correct expected type
         /// </summary>
-        Task ExecuteAsync(T parameter);
+        Task ExecuteAsync(T? parameter);
     }
 
     /// <summary>
@@ -146,24 +146,24 @@ namespace PRF.WPFCore.Commands
         }
 
         /// <inheritdoc />
-        public abstract bool CanExecute(object parameter);
+        public abstract bool CanExecute(object? parameter);
 
         /// <inheritdoc />
-        public abstract void Execute(object parameter);
+        public abstract void Execute(object? parameter);
 
         /// <inheritdoc />
-        public event EventHandler CanExecuteChanged;
+        public event EventHandler? CanExecuteChanged;
     }
 
     /// <inheritdoc cref="DelegateCommandLightBase" />
     public abstract class DelegateCommandLightWithoutParameterBase : DelegateCommandLightBase, IDelegateCommandLight
     {
-        private readonly Func<bool> _canExecute;
+        private readonly Func<bool>? _canExecute;
 
         /// <summary>
         /// Constructor of a parameterless command with an optional can execute
         /// </summary>
-        protected DelegateCommandLightWithoutParameterBase(Func<bool> canExecute = null)
+        protected DelegateCommandLightWithoutParameterBase(Func<bool>? canExecute = null)
         {
             _canExecute = canExecute;
         }
@@ -175,36 +175,36 @@ namespace PRF.WPFCore.Commands
         public abstract void Execute();
 
         /// <inheritdoc />
-        public override bool CanExecute(object parameter) => CanExecute();
+        public override bool CanExecute(object? parameter) => CanExecute();
 
         /// <inheritdoc />
-        public override void Execute(object parameter) => Execute();
+        public override void Execute(object? parameter) => Execute();
     }
 
     /// <inheritdoc cref="DelegateCommandLightBase" />
     public abstract class DelegateCommandLightWithParameterBase<T> : DelegateCommandLightBase, IDelegateCommandLight<T>
     {
-        private readonly Func<T, bool> _canExecute;
+        private readonly Func<T?, bool>? _canExecute;
 
         /// <summary>
         /// Constructor of a command with parameter and an optional can execute
         /// </summary>
-        protected DelegateCommandLightWithParameterBase(Func<T, bool> canExecute)
+        protected DelegateCommandLightWithParameterBase(Func<T?, bool>? canExecute)
         {
             _canExecute = canExecute;
         }
 
         /// <inheritdoc />
-        public bool CanExecute(T parameter) => _canExecute == null || _canExecute(parameter);
+        public bool CanExecute(T? parameter) => _canExecute == null || _canExecute(parameter);
 
         /// <inheritdoc />
-        public abstract void Execute(T parameter);
+        public abstract void Execute(T? parameter);
 
         /// <inheritdoc />
-        public override bool CanExecute(object parameter) => CanExecute(parameter.CheckCastParameter<T>());
+        public override bool CanExecute(object? parameter) => CanExecute(parameter.CheckCastParameter<T>());
 
         /// <inheritdoc />
-        public override void Execute(object parameter) => Execute(parameter.CheckCastParameter<T>());
+        public override void Execute(object? parameter) => Execute(parameter.CheckCastParameter<T>());
     }
 
     /// <inheritdoc />
@@ -213,7 +213,7 @@ namespace PRF.WPFCore.Commands
         private readonly Action _execute;
 
         /// <inheritdoc />
-        public DelegateCommandLight(Action execute, Func<bool> canExecute = null) : base(canExecute)
+        public DelegateCommandLight(Action execute, Func<bool>? canExecute = null) : base(canExecute)
         {
             _execute = execute;
         }
@@ -227,7 +227,7 @@ namespace PRF.WPFCore.Commands
         [Obsolete(@"WARNING: you are trying to use an async delegate in a sync constructor. It leads to a MAJOR BUG as the
 delegate will be downcasted to a sync Action and there will be no way to grab again the await part: everything after the first real awaitable call will be on its own. Please use the DelegateCommandAsync if you want an async delegate")]
         // ReSharper disable once UnusedParameter.Local
-        public DelegateCommandLight(Func<Task> executeAsync, Func<bool> canExecute = null) : base(canExecute)
+        public DelegateCommandLight(Func<Task> executeAsync, Func<bool>? canExecute = null) : base(canExecute)
         {
             throw new ArgumentException(
                 @"WARNING: you are trying to use an async delegate in a sync constructor. It leads to a MAJOR BUG as the
@@ -241,10 +241,10 @@ delegate will be downcasted to a sync Action and there will be no way to grab ag
     /// <inheritdoc />
     public sealed class DelegateCommandLight<T> : DelegateCommandLightWithParameterBase<T>
     {
-        private readonly Action<T> _execute;
+        private readonly Action<T?> _execute;
 
         /// <inheritdoc />
-        public DelegateCommandLight(Action<T> execute, Func<T, bool> canExecute = null) : base(canExecute)
+        public DelegateCommandLight(Action<T?> execute, Func<T?, bool>? canExecute = null) : base(canExecute)
         {
             _execute = execute;
         }
@@ -258,7 +258,7 @@ delegate will be downcasted to a sync Action and there will be no way to grab ag
         [Obsolete(@"WARNING: you are trying to use an async delegate in a sync constructor. It leads to a MAJOR BUG as the
 delegate will be downcasted to a sync Action and there will be no way to grab again the await part: everything after the first real awaitable call will be on its own. Please use the DelegateCommandAsync if you want an async delegate")]
         // ReSharper disable once UnusedParameter.Local
-        public DelegateCommandLight(Func<T, Task> executeAsync, Func<T, bool> canExecute = null) : base(canExecute)
+        public DelegateCommandLight(Func<T, Task> executeAsync, Func<T?, bool>? canExecute = null) : base(canExecute)
         {
             throw new ArgumentException(
                 @"WARNING: you are trying to use an async delegate in a sync constructor. It leads to a MAJOR BUG as the
@@ -266,7 +266,7 @@ delegate will be downcasted to a sync Action and there will be no way to grab ag
         }
 
         /// <inheritdoc />
-        public override void Execute(T parameter) => _execute(parameter);
+        public override void Execute(T? parameter) => _execute(parameter);
     }
 
     /// <summary>
@@ -274,8 +274,8 @@ delegate will be downcasted to a sync Action and there will be no way to grab ag
     /// </summary>
     public sealed class DelegateCommandLightAsync<T> : DelegateCommandLightWithParameterBase<T>, IDelegateCommandLightAsync<T>
     {
-        private readonly Func<T, Task> _executeAsync;
-        private readonly Action<Exception> _onErrorOnAsync;
+        private readonly Func<T?, Task> _executeAsync;
+        private readonly Action<Exception>? _onErrorOnAsync;
 
         /// <summary>
         /// constructor of an async command with parameter
@@ -284,21 +284,21 @@ delegate will be downcasted to a sync Action and there will be no way to grab ag
         /// <param name="canExecute">the can execute</param>
         /// <param name="onErrorOnAsync">When used as a ICommand by the framework, it will be a fire 
         /// and forget call but with a try catch. this action allow user to do error handleing. by default, a messagebox is displayed</param>
-        public DelegateCommandLightAsync(Func<T, Task> executeAsync, Func<T, bool> canExecute = null, Action<Exception> onErrorOnAsync = null) : base(canExecute)
+        public DelegateCommandLightAsync(Func<T?, Task> executeAsync, Func<T?, bool>? canExecute = null, Action<Exception>? onErrorOnAsync = null) : base(canExecute)
         {
             _executeAsync = executeAsync;
             _onErrorOnAsync = onErrorOnAsync;
         }
 
         /// <inheritdoc />
-        public override void Execute(T parameter)
+        public override void Execute(T? parameter)
         {
             //Request an Execute async in a fire and forget mode
             ExecuteAsync(parameter).ConfigureAwait(false);
         }
 
         /// <inheritdoc />
-        public async Task ExecuteAsync(T parameter)
+        public async Task ExecuteAsync(T? parameter)
         {
             // execute with a fire and forget BUT a try catch finally
             await AsyncWrapperBase.WrapAsync(
@@ -314,7 +314,7 @@ delegate will be downcasted to a sync Action and there will be no way to grab ag
     public sealed class DelegateCommandLightAsync : DelegateCommandLightWithoutParameterBase, IDelegateCommandLightAsync
     {
         private readonly Func<Task> _executeAsync;
-        private readonly Action<Exception> _onErrorOnAsync;
+        private readonly Action<Exception>? _onErrorOnAsync;
 
         /// <summary>
         /// constructor of an async command with parameter
@@ -323,7 +323,7 @@ delegate will be downcasted to a sync Action and there will be no way to grab ag
         /// <param name="canExecute">the can execute</param>
         /// <param name="onErrorOnAsync">When used as a ICommand by the framework, it will be a fire 
         /// and forget call but with a try catch. this action allow user to do error handleing. by default, a messagebox is displayed</param>
-        public DelegateCommandLightAsync(Func<Task> executeAsync, Func<bool> canExecute = null, Action<Exception> onErrorOnAsync = null) : base(canExecute)
+        public DelegateCommandLightAsync(Func<Task> executeAsync, Func<bool>? canExecute = null, Action<Exception>? onErrorOnAsync = null) : base(canExecute)
         {
             _executeAsync = executeAsync;
             _onErrorOnAsync = onErrorOnAsync;

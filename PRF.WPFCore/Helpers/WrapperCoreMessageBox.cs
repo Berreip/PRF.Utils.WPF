@@ -14,7 +14,7 @@ namespace PRF.WPFCore.Helpers
         /// <summary>
         /// Dispatch a callback in a new task and display a message in a message box on exception
         /// </summary>
-        public static async Task DispatchAndWrapAsync(Action action, Action onFinally = null, [CallerMemberName] string methodName = "")
+        public static async Task DispatchAndWrapAsync(Action action, Action? onFinally = null, [CallerMemberName] string methodName = "")
         {
             await AsyncWrapperBase.DispatchAndWrapAsyncBase(
                 action,
@@ -25,7 +25,7 @@ namespace PRF.WPFCore.Helpers
         /// <summary>
         /// Dispatch a callback in a new task and display a message in a message box on exception
         /// </summary>
-        public static async Task DispatchAndWrapAsync<T>(Func<T> action, Action onFinally = null, [CallerMemberName] string methodName = "")
+        public static async Task DispatchAndWrapAsync<T>(Func<T> action, Action? onFinally = null, [CallerMemberName] string methodName = "")
         {
             await AsyncWrapperBase.DispatchAndWrapAsyncBase(
                 action,
@@ -36,7 +36,7 @@ namespace PRF.WPFCore.Helpers
         /// <summary>
         /// Dispatch a callback in a new task and display a message in a message box on exception
         /// </summary>
-        public static async Task DispatchAndWrapAsync(Func<Task> action, Action onFinally = null, [CallerMemberName] string methodName = "")
+        public static async Task DispatchAndWrapAsync(Func<Task> action, Action? onFinally = null, [CallerMemberName] string methodName = "")
         {
             await AsyncWrapperBase.DispatchAndWrapAsyncBase(
                 action,
@@ -48,7 +48,7 @@ namespace PRF.WPFCore.Helpers
         /// <summary>
         /// Dispatch a callback in a new task and display a message in a message box on exception
         /// </summary>
-        public static async Task DispatchAndWrapAsync<T>(Func<Task<T>> action, Action onFinally = null, [CallerMemberName] string methodName = "")
+        public static async Task DispatchAndWrapAsync<T>(Func<Task<T>> action, Action? onFinally = null, [CallerMemberName] string methodName = "")
         {
             await AsyncWrapperBase.DispatchAndWrapAsyncBase(
                 action,

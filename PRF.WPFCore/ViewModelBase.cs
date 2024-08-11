@@ -8,7 +8,7 @@ using System.Runtime.CompilerServices;
 namespace PRF.WPFCore
 {
     /// <summary>
-    /// Base class for all viewModel. In order to avoid memory leak in notifiable collection, it is advised to implement this class
+    /// Base class for all viewModel. In order to avoid memory leak in notifiable collection, it is advised to implement this class.
     /// This class check that all raised properties exist on the current object
     /// </summary>
     public abstract class ViewModelBase : INotifyPropertyChanged
@@ -17,14 +17,14 @@ namespace PRF.WPFCore
         private double _epsilon = 0.001d;
 
         /// <inheritdoc />
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         /// <summary>
         /// Constructor
         /// </summary>
         protected ViewModelBase()
         {
-            // stocke les propriétés à la construction pour la vérification:
+            // stocke les propriétés à la construction pour la vérification :
             _propertyHash = GetType()
                 .GetProperties(BindingFlags.Instance | BindingFlags.Public)
                 .Select(o => o.Name)
@@ -34,9 +34,9 @@ namespace PRF.WPFCore
         /// <summary>
         /// Notifie un changement de valeur d'une propriété notifiable
         /// </summary>
-        protected void RaisePropertyChanged([CallerMemberName] string propertyName = null)
+        protected void RaisePropertyChanged([CallerMemberName] string? propertyName = null)
         {
-            if (!_propertyHash.Contains(propertyName))
+            if (propertyName != null && !_propertyHash.Contains(propertyName))
             {
                 throw new InvalidOperationException($"Trying to raise notification on property \"{propertyName}\" which does not exists on type \"{GetType().Name}\"");
             }
@@ -47,7 +47,7 @@ namespace PRF.WPFCore
         /// <summary>
         /// Si la valeur a changé, met à jour l'ancienne valeur et notifie le changement de valeur de la propriété
         /// </summary>
-        protected bool SetProperty<T>(ref T oldValue, T newValue, [CallerMemberName] string propertyName = null)
+        protected bool SetProperty<T>(ref T oldValue, T newValue, [CallerMemberName] string? propertyName = null)
         {
             if (oldValue is double oldValueDouble &&
                 newValue is double newValueDouble && 
@@ -56,9 +56,9 @@ namespace PRF.WPFCore
                 return false;
             }
 
-            if (oldValue is float oldValuefloat &&
-                newValue is float newValuefloat && 
-                Math.Abs(oldValuefloat - newValuefloat) < _epsilon)
+            if (oldValue is float oldValueFloat &&
+                newValue is float newValueFloat &&
+                Math.Abs(oldValueFloat - newValueFloat) < _epsilon)
             {
                 return false;
             }

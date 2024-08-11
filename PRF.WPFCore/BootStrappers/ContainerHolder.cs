@@ -11,6 +11,6 @@ namespace PRF.WPFCore.BootStrappers
         /// <summary>
         /// Stockage du container en static: pas terrible mais idispensable pour certaines techniques (dependency properties, ...)
         /// </summary>
-        public static IInjectionContainer Container { get; set; }
+        public static IInjectionContainer? Container { get; set; }
     }
 }

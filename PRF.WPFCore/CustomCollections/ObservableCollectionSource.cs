@@ -14,7 +14,7 @@ namespace PRF.WPFCore.CustomCollections
         /// </summary>
         /// <param name="enableCollectionSynchronisation">Determine if the crossThread manipulation for the underlying collection will be enabled</param>
         /// <returns>the default view</returns>
-        public static ICollectionView GetDefaultView<T>(bool enableCollectionSynchronisation = true)
+        public static ICollectionView GetDefaultView<T>(bool enableCollectionSynchronisation = true) where T : notnull
         {
             return GetDefaultView<T>(out _, enableCollectionSynchronisation);
         }
@@ -25,7 +25,7 @@ namespace PRF.WPFCore.CustomCollections
         /// <param name="elements">list of items to add in the Collection</param>
         /// <param name="enableCollectionSynchronisation">Determine if the crossThread manipulation for the underlying collection will be enabled</param>
         /// <returns>the default view</returns>
-        public static ICollectionView GetDefaultView<T>(IEnumerable<T> elements, bool enableCollectionSynchronisation = true)
+        public static ICollectionView GetDefaultView<T>(IEnumerable<T> elements, bool enableCollectionSynchronisation = true) where T : notnull
         {
             return GetDefaultView(elements, out _, enableCollectionSynchronisation);
         }
@@ -36,7 +36,7 @@ namespace PRF.WPFCore.CustomCollections
         /// <param name="col">the newly created ObservableCollectionRanged</param>
         /// <param name="enableCollectionSynchronisation">Determine if the crossThread manipulation for the underlying collection will be enabled</param>
         /// <returns>the default view</returns>
-        public static ICollectionView GetDefaultView<T>(out ObservableCollectionRanged<T> col, bool enableCollectionSynchronisation = true)
+        public static ICollectionView GetDefaultView<T>(out ObservableCollectionRanged<T> col, bool enableCollectionSynchronisation = true) where T : notnull
         {
             col = new ObservableCollectionRanged<T>(enableCollectionSynchronisation);
             return CollectionViewSource.GetDefaultView(col);
@@ -50,7 +50,7 @@ namespace PRF.WPFCore.CustomCollections
         /// <param name="col">the newly created ObservableCollectionRanged</param>
         /// <param name="enableCollectionSynchronisation">Determine if the crossThread manipulation for the underlying collection will be enabled</param>
         /// <returns>the default view</returns>
-        public static ICollectionView GetDefaultView<T>(IEnumerable<T> elements, out ObservableCollectionRanged<T> col, bool enableCollectionSynchronisation = true)
+        public static ICollectionView GetDefaultView<T>(IEnumerable<T> elements, out ObservableCollectionRanged<T> col, bool enableCollectionSynchronisation = true) where T : notnull
         {
             col = new ObservableCollectionRanged<T>(elements, enableCollectionSynchronisation);
             return CollectionViewSource.GetDefaultView(col);
