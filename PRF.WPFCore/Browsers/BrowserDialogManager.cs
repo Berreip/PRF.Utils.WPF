@@ -50,6 +50,35 @@ namespace PRF.WPFCore.Browsers
         }
 
         /// <summary>
+        /// Ouvre une fenêtre de choix de fichier et renvoie null si l'on a pas de fichier choisi
+        /// </summary>
+        /// <param name="filter">le filtre sur le choix de fichier</param>
+        /// <param name="title">le titre de la fenetre ('Choose File' par défaut)</param>
+        /// <param name="initialDirectory">le dossier initial à ouvrir (par défaut, il s'agit du dernier dossier ouvert)</param>
+        /// <returns>le fichier choisi ou null si aucun choix</returns>
+        public static IFileInfo? OpenFileBrowserSlim(string filter, string title = "Choose File", string? initialDirectory = null)
+        {
+            var ofd = initialDirectory != null
+                ? new OpenFileDialog
+                {
+                    Filter = filter,
+                    Title = title,
+                    InitialDirectory = initialDirectory,
+                    Multiselect = false,
+                }
+                : new OpenFileDialog
+                {
+                    Filter = filter,
+                    Title = title,
+                    Multiselect = false,
+                };
+
+            return ofd.ShowDialog() == true && File.Exists(ofd.FileName)
+                ? new FileInfoWrapper(ofd.FileName)
+                : null;
+        }
+
+        /// <summary>
         /// Ouvre une fenêtre de choix de dossier et renvoie null si l'on a pas de dossier choisi 
         /// </summary>
         /// <param name="description">la description de la fenetre </param>
@@ -64,6 +93,25 @@ namespace PRF.WPFCore.Browsers
                 fbd.Description = description;
                 return fbd.ShowDialog() == DialogResult.OK && !string.IsNullOrEmpty(fbd.SelectedPath) && Directory.Exists(fbd.SelectedPath)
                     ? new DirectoryInfo(fbd.SelectedPath)
+                    : null;
+            }
+        }
+
+        /// <summary>
+        /// Ouvre une fenêtre de choix de dossier et renvoie null si l'on a pas de dossier choisi
+        /// </summary>
+        /// <param name="description">la description de la fenetre </param>
+        /// <param name="originalPath">le chemin source</param>
+        /// <returns></returns>
+        [Obsolete("this Open file browser use the WindowsForm legacy Dialog. Use the BrowserDialogManager.OpenFolderBrowser instead")]
+        public static IDirectoryInfo? OpenDirectoryBrowserSlim(string description, string originalPath = "")
+        {
+            using (var fbd = new FolderBrowserDialog())
+            {
+                fbd.SelectedPath = originalPath;
+                fbd.Description = description;
+                return fbd.ShowDialog() == DialogResult.OK && !string.IsNullOrEmpty(fbd.SelectedPath) && Directory.Exists(fbd.SelectedPath)
+                    ? new DirectoryInfoWrapper(fbd.SelectedPath)
                     : null;
             }
         }
